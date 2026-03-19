@@ -388,8 +388,14 @@ _BUMP_SCRIPT=""
 [ -x "$_CHIEF_ROOT/bin/chief-bump-version" ] && _BUMP_SCRIPT="$_CHIEF_ROOT/bin/chief-bump-version"
 [ -z "$_BUMP_SCRIPT" ] && [ -x "$HOME/.claude/skills/chief/bin/chief-bump-version" ] && _BUMP_SCRIPT="$HOME/.claude/skills/chief/bin/chief-bump-version"
 
+# Guard — bail out with an actionable message if script not found
+if [ -z "$_BUMP_SCRIPT" ]; then
+  echo "Error: chief-bump-version not found. Run ./setup in your chief install directory to build it." >&2
+  exit 1
+fi
+
 # Run with the chosen bump type (patch / minor / major)
-"$_BUMP_SCRIPT" <patch|minor|major>
+"$_BUMP_SCRIPT" patch   # replace 'patch' with minor or major as appropriate
 ```
 
 Show the result: "Bumped to v[new version]." Then include `VERSION` and `package.json` in the files to be staged in Phase 5.
