@@ -1,6 +1,6 @@
 {
   "name": "chief",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "chief — your dev mate. Claude Code skills + fast headless browser. One repo, one install, entire AI engineering workflow.",
   "license": "MIT",
   "type": "module",
