@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# chief-bump-version — bump the chief version in both VERSION and package.json
+#
+# Usage:
+#   chief-bump-version patch    # 0.8.5 → 0.8.6
+#   chief-bump-version minor    # 0.8.5 → 0.9.0
+#   chief-bump-version major    # 0.8.5 → 1.0.0
+#
+# Both VERSION and package.json are updated atomically.
+# Run this before committing — chief-push calls it as part of the version bump phase.
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+VERSION_FILE="$ROOT/VERSION"
+PKG_FILE="$ROOT/package.json"
+
+BUMP="${1:-}"
+if [ -z "$BUMP" ]; then
+  echo "Usage: chief-bump-version <patch|minor|major>" >&2
+  exit 1
+fi
+
+if ! [[ "$BUMP" =~ ^(patch|minor|major)$ ]]; then
+  echo "Error: bump type must be patch, minor, or major (got: $BUMP)" >&2
+  exit 1
+fi
+
+# Read current version from VERSION file
+CURRENT="$(cat "$VERSION_FILE" | tr -d '[:space:]')"
+if ! [[ "$CURRENT" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+  echo "Error: VERSION file contains unexpected value: $CURRENT" >&2
+  exit 1
+fi
+
+MAJOR="${BASH_REMATCH[1]}"
+MINOR="${BASH_REMATCH[2]}"
+PATCH="${BASH_REMATCH[3]}"
+
+case "$BUMP" in
+  major) MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+  minor) MINOR=$((MINOR + 1)); PATCH=0 ;;
+  patch) PATCH=$((PATCH + 1)) ;;
+esac
+
+NEW="$MAJOR.$MINOR.$PATCH"
+
+# Update VERSION file
+echo "$NEW" > "$VERSION_FILE"
+
+# Update package.json version field
+# Uses sed to replace the "version": "X.Y.Z" line — safe for any semver
+sed -i "s/\"version\": \"$CURRENT\"/\"version\": \"$NEW\"/" "$PKG_FILE"
+
+echo "$CURRENT → $NEW"
