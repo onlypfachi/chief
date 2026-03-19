@@ -27,7 +27,7 @@ Chief doesn't replace developers. Chief makes developers better at being develop
 **What that looks like in practice:**
 
 - You make the calls. Chief lays out the plan first and waits for your approval.
-- Chief and you writes the code. Chief reviews it before it goes anywhere — debug statements, lint, tests, all of it.
+- Chief and you write the code. Chief reviews it before it goes anywhere — debug statements, lint, tests, all of it.
 - You stay in control. Chief only takes the wheel if you explicitly hand it over (`/chief-cook`).
 - You get better over time. Chief tracks your patterns, names what you're doing well, and gives you one concrete thing to improve each session.
 
@@ -122,7 +122,7 @@ When you want chief to go hands-free: `/chief-cook`. Chief takes over, makes all
 Open Claude Code and paste this prompt. Claude does the rest.
 
 ```
-Install chief: run `git clone https://github.com/YOUR_USERNAME/chief.git ~/.claude/skills/chief && cd ~/.claude/skills/chief && ./setup` — setup builds the browser binary, registers skills, and updates ~/.claude/CLAUDE.md. Then ask the user if they also want to add chief to the current project so teammates get it.
+Install chief: run `git clone https://github.com/onlypfachi/chief.git ~/.claude/skills/chief && cd ~/.claude/skills/chief && ./setup` — setup builds the browser binary, registers skills, and updates ~/.claude/CLAUDE.md. Then ask the user if they also want to add chief to the current project so teammates get it.
 ```
 
 ### Step 2: Add to your repo so teammates get it (optional)
