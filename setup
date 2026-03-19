@@ -84,6 +84,24 @@ if [ "$SKILLS_BASENAME" = "skills" ]; then
     fi
   done
 
+  # 5. Update CLAUDE.md with chief section (idempotent)
+  CLAUDE_DIR="$(dirname "$SKILLS_DIR")"
+  CLAUDE_MD="$CLAUDE_DIR/CLAUDE.md"
+  if ! grep -q "## chief" "$CLAUDE_MD" 2>/dev/null; then
+    touch "$CLAUDE_MD"
+    {
+      printf '\n## chief\n'
+      printf 'Use /browse from chief for all web browsing. Never use mcp__claude-in-chrome__* tools.\n'
+      printf 'Available skills: /chief, /chief-init, /chief-push, /chief-cook, /office-hours,\n'
+      printf '/plan-ceo-review, /plan-eng-review, /plan-design-review, /design-consultation,\n'
+      printf '/review, /ship, /browse, /qa, /qa-only, /design-review, /setup-browser-cookies,\n'
+      printf '/retro, /investigate, /document-release, /codex, /careful, /freeze, /guard,\n'
+      printf '/unfreeze, /gstack-upgrade.\n'
+      printf 'If chief skills are not working, run: cd %s && ./setup\n' "$GSTACK_DIR"
+    } >> "$CLAUDE_MD"
+    echo "  updated: $CLAUDE_MD"
+  fi
+
   echo "gstack ready."
   echo "  browse: $BROWSE_BIN"
   if [ ${#linked[@]} -gt 0 ]; then
