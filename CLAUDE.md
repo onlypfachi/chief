@@ -229,7 +229,7 @@ This project uses chief for developer coaching and workflow automation.
 stack, conventions, team setup, and coaching configuration.
 
 Available skills: /chief, /chief-init, /chief-push, /chief-cook, /chief-upgrade,
-/review, /ship, /qa, /qa-only, /investigate, /retro, /office-hours,
+/chief-resolve, /review, /ship, /qa, /qa-only, /investigate, /retro, /office-hours,
 /plan-eng-review, /plan-ceo-review, /plan-design-review, /design-review,
 /design-consultation, /document-release, /codex, /careful, /freeze, /guard,
 /unfreeze, /setup-browser-cookies, /browse.

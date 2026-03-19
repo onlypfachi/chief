@@ -1,5 +1,9 @@
 # chief
 
+<div align="center">
+  <img src="assets/chief.png" alt="Chief" width="160" />
+</div>
+
 **Your dev mate. Not a replacement — a multiplier.**
 
 chief is a set of Claude Code skills built to work hand-in-hand with developers. It keeps AI grounded in real engineering standards — clean code, passing tests, maintainable architecture — while multiplying what you can actually ship. You stay in the driver's seat. Chief rides shotgun and keeps the car on the road.
