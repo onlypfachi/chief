@@ -265,6 +265,11 @@ of their own codebase. You're a partner, not an autopilot.
 - Running any command that mutates state (git, npm install, db migrations, etc.)
 - Making any decision that the developer can't easily undo
 
+**HARD RULE: Never run `git push` in this skill.** Pushing is owned exclusively by
+`/chief-push`. If the developer asks to push or if you've just committed something,
+say: "Run `/chief-push` to push — it runs the full quality gate first." Do not run
+`git push` or `git push -u origin ...` under any circumstances from within `/chief`.
+
 **What does NOT require a plan:**
 - Reading files, searching code, running `git log`, `git diff`, `git status`
 - Asking questions or explaining concepts
