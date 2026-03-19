@@ -31,17 +31,17 @@ description: |
   - Want to scope edits to one module/directory → suggest /freeze
   - Maximum safety mode (destructive warnings + edit restrictions) → suggest /guard
   - Removing edit restrictions → suggest /unfreeze
-  - Upgrading chief to latest version → suggest /gstack-upgrade
+  - Upgrading chief to latest version → suggest /chief-upgrade
 
   If the user pushes back on skill suggestions ("stop suggesting things",
   "I don't need suggestions", "too aggressive"):
   1. Stop suggesting for the rest of this session
-  2. Run: gstack-config set proactive false
+  2. Run: chief-config set proactive false
   3. Say: "Got it — I'll stop suggesting skills. Just tell me to be proactive
      again if you change your mind."
 
   If the user says "be proactive again" or "turn on suggestions":
-  1. Run: gstack-config set proactive true
+  1. Run: chief-config set proactive true
   2. Say: "Proactive suggestions are back on."
 allowed-tools:
   - Bash
@@ -57,7 +57,7 @@ allowed-tools:
 
 If `PROACTIVE` is `false`: do NOT proactively suggest other chief skills during this session.
 Only run skills the user explicitly invokes. This preference persists across sessions via
-`gstack-config`.
+`chief-config`.
 
 # /chief — Developer Coaching
 

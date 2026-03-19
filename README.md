@@ -26,8 +26,8 @@ Chief doesn't replace developers. Chief makes developers better at being develop
 
 **What that looks like in practice:**
 
-- You write the code. Chief reviews it before it goes anywhere — debug statements, lint, tests, all of it.
 - You make the calls. Chief lays out the plan first and waits for your approval.
+- Chief and you writes the code. Chief reviews it before it goes anywhere — debug statements, lint, tests, all of it.
 - You stay in control. Chief only takes the wheel if you explicitly hand it over (`/chief-cook`).
 - You get better over time. Chief tracks your patterns, names what you're doing well, and gives you one concrete thing to improve each session.
 

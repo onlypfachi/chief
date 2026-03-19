@@ -220,3 +220,15 @@ The active skill lives at `~/.claude/skills/gstack/`. After making changes:
 3. Rebuild: `cd ~/.claude/skills/gstack && bun run build`
 
 Or copy the binary directly: `cp browse/dist/browse ~/.claude/skills/gstack/browse/dist/browse`
+
+## Chief
+
+This project uses chief for developer coaching and workflow automation.
+
+**At the start of every chief session:** Read `CHIEF.md` for project context —
+stack, conventions, team setup, and coaching configuration.
+
+Available skills: /chief, /chief-init, /review, /ship, /qa, /qa-only, /investigate,
+/retro, /office-hours, /plan-eng-review, /plan-ceo-review, /plan-design-review,
+/design-review, /design-consultation, /document-release, /codex, /careful,
+/freeze, /guard, /unfreeze, /browse.
