@@ -44,14 +44,14 @@ if (evalsEnabled && !process.env.EVALS_ALL) {
 
 // --- Helper functions ---
 
-/** Copy all SKILL.md files into tmpDir/.claude/skills/gstack/ for auto-discovery */
+/** Copy all SKILL.md files into tmpDir/.claude/skills/chief/ for auto-discovery */
 function installSkills(tmpDir: string) {
   const skillDirs = [
-    '', // root gstack SKILL.md
+    '', // root chief SKILL.md
     'qa', 'qa-only', 'ship', 'review', 'plan-ceo-review', 'plan-eng-review',
     'plan-design-review', 'design-review', 'design-consultation', 'retro',
     'document-release', 'investigate', 'office-hours', 'browse', 'setup-browser-cookies',
-    'gstack-upgrade', 'humanizer',
+    'chief-upgrade', 'humanizer',
   ];
 
   for (const skill of skillDirs) {
@@ -59,8 +59,8 @@ function installSkills(tmpDir: string) {
     if (!fs.existsSync(srcPath)) continue;
 
     const destDir = skill
-      ? path.join(tmpDir, '.claude', 'skills', 'gstack', skill)
-      : path.join(tmpDir, '.claude', 'skills', 'gstack');
+      ? path.join(tmpDir, '.claude', 'skills', 'chief', skill)
+      : path.join(tmpDir, '.claude', 'skills', 'chief');
     fs.mkdirSync(destDir, { recursive: true });
     fs.copyFileSync(srcPath, path.join(destDir, 'SKILL.md'));
   }

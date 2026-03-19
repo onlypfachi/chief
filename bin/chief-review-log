@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# gstack-review-log — atomically log a review result
-# Usage: gstack-review-log '{"skill":"...","timestamp":"...","status":"..."}'
+# chief-review-log — atomically log a review result
+# Usage: chief-review-log '{"skill":"...","timestamp":"...","status":"..."}'
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-eval $("$SCRIPT_DIR/gstack-slug" 2>/dev/null)
-GSTACK_HOME="${GSTACK_HOME:-$HOME/.gstack}"
-mkdir -p "$GSTACK_HOME/projects/$SLUG"
-echo "$1" >> "$GSTACK_HOME/projects/$SLUG/$BRANCH-reviews.jsonl"
+eval $("$SCRIPT_DIR/chief-slug" 2>/dev/null)
+CHIEF_HOME="${CHIEF_HOME:-$HOME/.chief}"
+mkdir -p "$CHIEF_HOME/projects/$SLUG"
+echo "$1" >> "$CHIEF_HOME/projects/$SLUG/$BRANCH-reviews.jsonl"
