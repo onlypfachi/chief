@@ -32,6 +32,7 @@ description: |
   - Maximum safety mode (destructive warnings + edit restrictions) → suggest /guard
   - Removing edit restrictions → suggest /unfreeze
   - Upgrading chief to latest version → suggest /chief-upgrade
+  - Working through PR review comments → suggest /chief-resolve
 
   If the user pushes back on skill suggestions ("stop suggesting things",
   "I don't need suggestions", "too aggressive"):
