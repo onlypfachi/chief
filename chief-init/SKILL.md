@@ -133,6 +133,41 @@ Read each one that exists. Extract:
 
 ---
 
+## Phase 2.5: Detect Versioning Strategy
+
+Run all versioning detection silently. Collect results. Do NOT ask the developer anything yet.
+
+```bash
+# Version files — check in order of priority
+[ -f VERSION ] && echo "VERSION_FILE:VERSION" && cat VERSION
+[ -f version.txt ] && echo "VERSION_FILE:version.txt" && cat version.txt
+[ -f package.json ] && node -e "const p=require('./package.json'); if(p.version) console.log('PACKAGE_JSON_VERSION:'+p.version)" 2>/dev/null
+[ -f pyproject.toml ] && grep -E '^version\s*=' pyproject.toml | head -1 && echo "VERSION_FILE:pyproject.toml"
+[ -f Cargo.toml ] && grep -E '^version\s*=' Cargo.toml | head -1 && echo "VERSION_FILE:Cargo.toml"
+[ -f setup.py ] && grep -E "version\s*=" setup.py | head -1 && echo "VERSION_FILE:setup.py"
+[ -f setup.cfg ] && grep -E '^version\s*=' setup.cfg | head -1 && echo "VERSION_FILE:setup.cfg"
+[ -f Chart.yaml ] && grep -E '^version:' Chart.yaml | head -1 && echo "VERSION_FILE:Chart.yaml"
+[ -f build.gradle ] && grep -E "^version\s*=" build.gradle | head -1 && echo "VERSION_FILE:build.gradle"
+[ -f pom.xml ] && grep -m1 '<version>' pom.xml | sed 's/.*<version>\(.*\)<\/version>.*/VERSION_FILE:pom.xml VERSION:\1/'
+
+# CHANGELOG format hint
+[ -f CHANGELOG.md ] && head -5 CHANGELOG.md
+[ -f CHANGELOG ] && head -5 CHANGELOG
+[ -f HISTORY.md ] && head -3 HISTORY.md
+
+# Bump scripts
+ls bin/bump* scripts/bump* scripts/version* bin/version* Makefile 2>/dev/null
+[ -f Makefile ] && grep -i "version\|bump\|release" Makefile | head -5
+```
+
+From the results, determine:
+- **Version source of truth**: which file(s) hold the canonical version
+- **Version format**: semver (e.g. `1.2.3`), calendar (e.g. `2024.01.15`), or other
+- **Whether version is synced across files**: e.g. both `VERSION` and `package.json` need updating
+- **Bump script**: is there an existing bump/release script to reuse?
+
+---
+
 ## Phase 3: Developer Interview
 
 Ask these questions **ONE AT A TIME** via AskUserQuestion. Auto-detected answers can be
@@ -221,6 +256,15 @@ Write `CHIEF.md` at the project root. This is the file chief reads every session
 | Linting / formatting | {ESLint + Prettier / Rubocop / Ruff / etc.} |
 | Deployment | {Vercel / Fly.io / Railway / Render / Docker / etc.} |
 | CI/CD | {GitHub Actions / GitLab CI / etc. or "none"} |
+
+## Versioning
+
+| | |
+|---|---|
+| Format | {semver / calver / other} |
+| Version files | {list each file that must be updated on release, e.g. `VERSION`, `package.json`} |
+| Bump script | {path to bump script, or "none — chief-push manages it"} |
+| Notes | {any project-specific versioning rules, e.g. "major only on breaking API changes"} |
 
 ## Project Structure
 

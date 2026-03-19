@@ -364,23 +364,36 @@ git branch -m [new-name]
 
 ## Phase 4.5: Version Bump
 
-Ask via AskUserQuestion whether to bump the version before committing:
+First, read versioning config from CHIEF.md and detect current version:
 
-> "Want to bump the version?
->
-> A) patch — bug fixes, small tweaks (e.g. 0.8.5 → 0.8.6)
-> B) minor — new features, backwards-compatible (e.g. 0.8.5 → 0.9.0)
-> C) major — breaking changes (e.g. 0.8.5 → 1.0.0)
-> D) No bump — keep version as-is
->
-> RECOMMENDATION: Choose A for most pushes. Choose D for docs/chore-only commits."
-
-First, read the current version so the developer can see what they're bumping from:
 ```bash
-cat VERSION 2>/dev/null || echo "no VERSION file"
+# Read versioning section from CHIEF.md
+[ -f CHIEF.md ] && grep -A10 "^## Versioning" CHIEF.md 2>/dev/null
+
+# Read current version from all known version files
+cat VERSION 2>/dev/null && echo "---VERSION_FILE:VERSION"
+node -e "const p=require('./package.json'); if(p.version) console.log('package.json: '+p.version)" 2>/dev/null
+grep -E '^version\s*=' pyproject.toml 2>/dev/null && echo "---VERSION_FILE:pyproject.toml"
+grep -E '^version\s*=' Cargo.toml 2>/dev/null && echo "---VERSION_FILE:Cargo.toml"
 ```
 
-If A, B, or C: run the bump script:
+From the output above, determine:
+- **Current version** (prefer CHIEF.md `Version files` list, then fall back to what's detected above)
+- **Which files need to be updated** on a bump
+
+Show the developer the current version and ask via AskUserQuestion:
+
+> "Current version: **v{current}**. This push needs a version bump.
+>
+> A) patch — bug fixes, small tweaks (v{current} → v{patch+1})
+> B) minor — new features, backwards-compatible (v{current} → v{minor+1}.0)
+> C) major — breaking changes (v{current} → v{major+1}.0.0)
+> D) Skip — already bumped or this is docs/chore only
+>
+> RECOMMENDATION: Choose A for most pushes. Only skip if you already bumped the version or the commit is docs/chore with zero user-facing change."
+
+**If A, B, or C:** run the bump script:
+
 ```bash
 # Detect script location
 _CHIEF_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
@@ -398,9 +411,22 @@ fi
 "$_BUMP_SCRIPT" patch   # replace 'patch' with minor or major as appropriate
 ```
 
-Show the result: "Bumped to v[new version]." Then include `VERSION` and `package.json` in the files to be staged in Phase 5.
+After the script runs, verify all version files listed in CHIEF.md `Version files` were updated:
 
-If D: skip, continue to Phase 5. Do not stage VERSION or package.json unless they were already changed.
+```bash
+# Confirm each version file reflects the new version
+# (check each file listed in CHIEF.md Versioning section)
+cat VERSION 2>/dev/null
+node -e "const p=require('./package.json'); console.log('package.json:', p.version)" 2>/dev/null
+grep -E '^version' pyproject.toml 2>/dev/null
+grep -E '^version' Cargo.toml 2>/dev/null
+```
+
+If any listed version file was NOT updated by the bump script, update it manually to match the new version before continuing.
+
+Show the result: "Bumped to v{new version}." Then include all updated version files in the files to be staged in Phase 5.
+
+**If D (skip):** Ask for a one-line reason — "Just confirming: why no bump? (e.g. already bumped, docs-only)". Accept the answer and continue. Do not stage version files unless they were already changed.
 
 ---
 
@@ -539,7 +565,7 @@ Phase 1 — Debug scan:   ✓ 2 statements removed
 Phase 2 — Lint:         ✓ 0 errors
 Phase 3 — Tests:        ✓ 47 passed, 0 failed
 Phase 4 — Branch:       ✓ upstream set
-Phase 4.5 — Version:    ✓ bumped to v0.8.6 (or "⚠ skipped")
+Phase 4.5 — Version:    ✓ bumped to v0.8.6 (or "⚠ skipped — [reason]")
 Phase 5 — Commit:       ✓ conventional commit
 Phase 6 — Push:         ✓ pushed to origin
 
