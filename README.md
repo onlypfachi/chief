@@ -119,13 +119,17 @@ When you want chief to go hands-free: `/chief-cook`. Chief takes over, makes all
 
 ### Step 1: Install on your machine
 
-Open Claude Code and paste this. Claude does the rest.
+Open Claude Code and paste this prompt. Claude does the rest.
 
-> Install chief: run **`git clone https://github.com/YOUR_USERNAME/chief.git ~/.claude/skills/chief && cd ~/.claude/skills/chief && ./setup`** — setup builds the browser binary, registers skills, and updates `~/.claude/CLAUDE.md`. Then ask the user if they also want to add chief to the current project so teammates get it.
+```
+Install chief: run `git clone https://github.com/YOUR_USERNAME/chief.git ~/.claude/skills/chief && cd ~/.claude/skills/chief && ./setup` — setup builds the browser binary, registers skills, and updates ~/.claude/CLAUDE.md. Then ask the user if they also want to add chief to the current project so teammates get it.
+```
 
 ### Step 2: Add to your repo so teammates get it (optional)
 
-> Add chief to this project: run **`cp -Rf ~/.claude/skills/chief .claude/skills/chief && rm -rf .claude/skills/chief/.git && cd .claude/skills/chief && ./setup`** — setup builds the binary, registers skills, and updates this project's `CLAUDE.md`.
+```
+Add chief to this project: run `cp -Rf ~/.claude/skills/chief .claude/skills/chief && rm -rf .claude/skills/chief/.git && cd .claude/skills/chief && ./setup` — setup builds the binary, registers skills, and updates this project's CLAUDE.md.
+```
 
 Real files get committed to your repo (not a submodule), so `git clone` just works. Everything lives inside `.claude/`. Nothing touches your PATH or runs in the background.
 
@@ -133,13 +137,22 @@ Real files get committed to your repo (not a submodule), so `git clone` just wor
 
 ## Troubleshooting
 
-**Skill not showing up?** `cd ~/.claude/skills/chief && ./setup`
+**Skill not showing up?**
+```
+cd ~/.claude/skills/chief && ./setup
+```
 
-**`/browse` fails?** `cd ~/.claude/skills/chief && bun install && bun run build`
+**`/browse` fails?**
+```
+cd ~/.claude/skills/chief && bun install && bun run build
+```
 
 **Stale install?** Run `/gstack-upgrade` — or set `auto_upgrade: true` in `~/.gstack/config.yaml`
 
-**Claude says it can't see the skills?** Re-run setup — it will add the chief section to `CLAUDE.md` automatically: `cd ~/.claude/skills/chief && ./setup`
+**Claude says it can't see the skills?** Re-run setup — it updates `CLAUDE.md` automatically:
+```
+cd ~/.claude/skills/chief && ./setup
+```
 
 ---
 
