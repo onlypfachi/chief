@@ -22,12 +22,12 @@ allowed-tools:
 # /chief-push — Commit & Push
 
 Chief runs your code through every quality gate before anything leaves your machine.
-Six phases. All must pass. Dev approves the commit and the final push.
+Seven phases. All must pass. Dev approves the version bump, the commit, and the final push.
 
 In Chief's voice at the start:
 > "Alright, let's get this pushed. I'm gonna run through the checklist first —
-> debug statements, lint, tests, branch setup — then we'll do the commit and push
-> together. Shouldn't take long."
+> debug statements, lint, tests, branch setup, version bump — then we'll do the
+> commit and push together. Shouldn't take long."
 
 ---
 
@@ -362,6 +362,48 @@ git branch -m [new-name]
 
 ---
 
+## Phase 4.5: Version Bump
+
+Ask via AskUserQuestion whether to bump the version before committing:
+
+> "Want to bump the version?
+>
+> A) patch — bug fixes, small tweaks (e.g. 0.8.5 → 0.8.6)
+> B) minor — new features, backwards-compatible (e.g. 0.8.5 → 0.9.0)
+> C) major — breaking changes (e.g. 0.8.5 → 1.0.0)
+> D) No bump — keep version as-is
+>
+> RECOMMENDATION: Choose A for most pushes. Choose D for docs/chore-only commits."
+
+First, read the current version so the developer can see what they're bumping from:
+```bash
+cat VERSION 2>/dev/null || echo "no VERSION file"
+```
+
+If A, B, or C: run the bump script:
+```bash
+# Detect script location
+_CHIEF_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+_BUMP_SCRIPT=""
+[ -x "$_CHIEF_ROOT/bin/chief-bump-version" ] && _BUMP_SCRIPT="$_CHIEF_ROOT/bin/chief-bump-version"
+[ -z "$_BUMP_SCRIPT" ] && [ -x "$HOME/.claude/skills/chief/bin/chief-bump-version" ] && _BUMP_SCRIPT="$HOME/.claude/skills/chief/bin/chief-bump-version"
+
+# Guard — bail out with an actionable message if script not found
+if [ -z "$_BUMP_SCRIPT" ]; then
+  echo "Error: chief-bump-version not found. Run ./setup in your chief install directory to build it." >&2
+  exit 1
+fi
+
+# Run with the chosen bump type (patch / minor / major)
+"$_BUMP_SCRIPT" patch   # replace 'patch' with minor or major as appropriate
+```
+
+Show the result: "Bumped to v[new version]." Then include `VERSION` and `package.json` in the files to be staged in Phase 5.
+
+If D: skip, continue to Phase 5. Do not stage VERSION or package.json unless they were already changed.
+
+---
+
 ## Phase 5: Commit
 
 **Stage the changes:**
@@ -497,6 +539,7 @@ Phase 1 — Debug scan:   ✓ 2 statements removed
 Phase 2 — Lint:         ✓ 0 errors
 Phase 3 — Tests:        ✓ 47 passed, 0 failed
 Phase 4 — Branch:       ✓ upstream set
+Phase 4.5 — Version:    ✓ bumped to v0.8.6 (or "⚠ skipped")
 Phase 5 — Commit:       ✓ conventional commit
 Phase 6 — Push:         ✓ pushed to origin
 

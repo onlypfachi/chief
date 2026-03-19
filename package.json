@@ -1,7 +1,7 @@
 {
   "name": "chief",
-  "version": "0.3.3",
-  "description": "Garry's Stack — Claude Code skills + fast headless browser. One repo, one install, entire AI engineering workflow.",
+  "version": "0.8.5",
+  "description": "chief — your dev mate. Claude Code skills + fast headless browser. One repo, one install, entire AI engineering workflow.",
   "license": "MIT",
   "type": "module",
   "bin": {
