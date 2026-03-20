@@ -1,16 +1,7 @@
 ---
 name: chief-init
 version: 1.0.0
-description: |
-  One-time project setup for chief. Run inside any project to generate CHIEF.md —
-  a project context file that chief reads at the start of every session. Detects
-  the stack automatically, then interviews the developer for what can't be inferred
-  from code. The result is a permanent project memory that makes every chief skill
-  smarter from the first use.
-  Use when setting up chief on a new project, when the team wants to configure chief
-  for their workflow, or when CHIEF.md is missing or out of date.
-  Suggest when the user runs /chief for the first time in a project that has no
-  CHIEF.md, or when the user says "set up chief", "configure chief", or "init chief".
+description: One-time project setup — detects your stack and writes CHIEF.md.
 allowed-tools:
   - Bash
   - Read

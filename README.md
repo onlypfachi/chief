@@ -4,7 +4,11 @@
   <img src="assets/chief.png" alt="Chief" width="160" />
 </div>
 
-**Your dev mate. Not a replacement — a multiplier.**
+**Built for the Hybrid Developer. Not a replacement — a multiplier.**
+
+The best developers today aren't just coders. They're **Hybrid Developers** — people who blend disciplines, tools, and modes of thinking to ship better products faster. They orchestrate AI tools without losing ownership of the system. They understand design and product well enough to make better technical decisions. They know when to reach for a visual builder and when to write the code from scratch.
+
+Chief is built for that person.
 
 chief is a set of Claude Code skills built to work hand-in-hand with developers. It keeps AI grounded in real engineering standards — clean code, passing tests, maintainable architecture — while multiplying what you can actually ship. You stay in the driver's seat. Chief rides shotgun and keeps the car on the road.
 
@@ -43,9 +47,15 @@ Every push goes through the quality gate — no debug statements in production, 
 
 ## Who chief is for
 
-- **Developers on teams** — bring a consistent quality gate and a coaching layer to every developer, junior to senior
-- **Solo developers** — the experienced peer who keeps your standards high when there's no one else to review your work
-- **Teams adopting AI coding** — structure and guardrails so AI assistance makes the codebase better, not just bigger
+Chief is built for the **Hybrid Developer** — in any of the forms that takes:
+
+- **The AI-Empowered Coder** — You use Copilot, Claude, and Gemini as force multipliers. You're not typing boilerplate; you're directing the system, reviewing the output, and owning the architecture. Chief keeps that workflow disciplined: plan first, review before push, no debug statements in production.
+
+- **The Multi-Disciplinary Builder** — You think in products, not tickets. You care about the user experience, understand the business logic, and write the code to bring it to life. Chief gives you the engineering rigour to match your breadth — quality gates, structured reviews, and a coaching layer that grows with you.
+
+- **The Low-Code Fusion Developer** — You build 80% fast with the best tools available, and write the 20% that needs to be custom. Chief works wherever you land: it doesn't care how much of your stack is visual and how much is hand-written. It cares that what ships is clean, tested, and maintainable.
+
+If you're still siloed — purely frontend, purely backend, or AI-free by choice — chief will still help you. But it's designed for the person who refuses to stay in one lane.
 
 Chief works with Claude Code and any AI system that supports skills. It multiplies what AI can do for a developer — not by automating the developer away, but by making sure the AI is helping them build something they'll be proud of in six months.
 

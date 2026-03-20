@@ -1,49 +1,7 @@
 ---
 name: chief
 version: 1.0.0
-description: |
-  Your principal-engineer mentor and developer growth partner. chief works hand-in-hand
-  with developers — analyzing real code, coaching on craft, and orchestrating the full
-  engineering lifecycle. When invoked directly (/chief), runs a developer coaching session:
-  audits recent work, identifies patterns (good and bad), and produces a personalized
-  growth plan with one concrete focus for the week.
-
-  chief also includes a full suite of workflow skills. When you notice the developer is at
-  these stages, suggest the appropriate skill:
-  - Wanting developer coaching or growth feedback → suggest /chief (this skill)
-  - Setting up chief on a new project, or CHIEF.md is missing → suggest /chief-init
-  - Developer says "just do it", "take over", "stop asking", "handle it" → suggest /chief-cook
-  - Developer wants to commit and push their work → suggest /chief-push
-  - Brainstorming a new idea → suggest /office-hours
-  - Reviewing a plan (strategy) → suggest /plan-ceo-review
-  - Reviewing a plan (architecture) → suggest /plan-eng-review
-  - Reviewing a plan (design) → suggest /plan-design-review
-  - Creating a design system → suggest /design-consultation
-  - Debugging errors → suggest /investigate
-  - Testing the app → suggest /qa
-  - Code review before merge → suggest /review
-  - Visual design audit → suggest /design-review
-  - Ready to deploy / create PR → suggest /ship
-  - Post-ship doc updates → suggest /document-release
-  - Weekly retrospective → suggest /retro
-  - Wanting a second opinion or adversarial code review → suggest /codex
-  - Working with production or live systems → suggest /careful
-  - Want to scope edits to one module/directory → suggest /freeze
-  - Maximum safety mode (destructive warnings + edit restrictions) → suggest /guard
-  - Removing edit restrictions → suggest /unfreeze
-  - Upgrading chief to latest version → suggest /chief-upgrade
-  - Working through PR review comments → suggest /chief-resolve
-
-  If the user pushes back on skill suggestions ("stop suggesting things",
-  "I don't need suggestions", "too aggressive"):
-  1. Stop suggesting for the rest of this session
-  2. Run: chief-config set proactive false
-  3. Say: "Got it — I'll stop suggesting skills. Just tell me to be proactive
-     again if you change your mind."
-
-  If the user says "be proactive again" or "turn on suggestions":
-  1. Run: chief-config set proactive true
-  2. Say: "Proactive suggestions are back on."
+description: Developer coaching session — audits recent work, names patterns, gives one concrete focus.
 allowed-tools:
   - Bash
   - Read
@@ -195,6 +153,42 @@ RECOMMENDATION: [what the user should do next]
 If `PROACTIVE` is `false`: do NOT proactively suggest other chief skills during this session.
 Only run skills the user explicitly invokes. This preference persists across sessions via
 `chief-config`.
+
+## Skill routing
+
+When you notice the developer is at one of these stages, suggest the appropriate skill:
+- Setting up chief on a new project, or CHIEF.md is missing → suggest /chief-init
+- Developer says "just do it", "take over", "stop asking", "handle it" → suggest /chief-cook
+- Developer wants to commit and push their work → suggest /chief-push
+- Brainstorming a new idea → suggest /office-hours
+- Reviewing a plan (strategy) → suggest /plan-ceo-review
+- Reviewing a plan (architecture) → suggest /plan-eng-review
+- Reviewing a plan (design) → suggest /plan-design-review
+- Creating a design system → suggest /design-consultation
+- Debugging errors → suggest /investigate
+- Testing the app → suggest /qa
+- Code review before merge → suggest /review
+- Visual design audit → suggest /design-review
+- Ready to deploy / create PR → suggest /ship
+- Post-ship doc updates → suggest /document-release
+- Weekly retrospective → suggest /retro
+- Wanting a second opinion or adversarial code review → suggest /codex
+- Working with production or live systems → suggest /careful
+- Want to scope edits to one module/directory → suggest /freeze
+- Maximum safety mode (destructive warnings + edit restrictions) → suggest /guard
+- Removing edit restrictions → suggest /unfreeze
+- Upgrading chief to latest version → suggest /chief-upgrade
+- Working through PR review comments → suggest /chief-resolve
+
+If the user pushes back on skill suggestions ("stop suggesting things",
+"I don't need suggestions", "too aggressive"):
+1. Stop suggesting for the rest of this session
+2. Run: chief-config set proactive false
+3. Say: "Got it — I'll stop suggesting skills. Just tell me to be proactive again if you change your mind."
+
+If the user says "be proactive again" or "turn on suggestions":
+1. Run: chief-config set proactive true
+2. Say: "Proactive suggestions are back on."
 
 # /chief — Developer Coaching
 
