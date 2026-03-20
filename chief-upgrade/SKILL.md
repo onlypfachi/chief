@@ -1,10 +1,7 @@
 ---
 name: chief-upgrade
 version: 1.1.0
-description: |
-  Upgrade chief to the latest version. Detects global vs vendored install,
-  runs the upgrade, and shows what's new. Use when asked to "upgrade chief",
-  "update chief", or "get latest version".
+description: Upgrade chief to the latest version and show what's new.
 allowed-tools:
   - Bash
   - Read

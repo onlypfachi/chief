@@ -1,13 +1,7 @@
 ---
 name: chief-cook
 version: 1.0.0
-description: |
-  Chief takes full control. Executes all requests autonomously — no plan approval,
-  no suggestion review, no check-ins on file changes. Chief makes all calls: approach,
-  architecture, implementation, file structure. Only hard-stops when an operation
-  could delete or permanently damage critical files. Everything else, Chief just does.
-  Use when the developer says "just do it", "take over", "handle it", "I trust you",
-  "stop asking and go", or hands Chief a task they want fully handled end-to-end.
+description: Full autonomy mode — chief executes end-to-end with no plan approvals or check-ins.
 allowed-tools:
   - Bash
   - Read

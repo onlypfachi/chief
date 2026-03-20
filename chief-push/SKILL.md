@@ -1,14 +1,7 @@
 ---
 name: chief-push
 version: 1.0.0
-description: |
-  Pre-push quality gate. Scans changed files for debug statements, runs lint,
-  runs tests, checks branch setup, commits with conventional commit format,
-  then pushes. Every step must pass before moving to the next. Dev approves
-  the commit message and the final push before anything leaves local.
-  Use when the developer wants to commit and push their work. Suggest when
-  the developer says "push my changes", "commit and push", "ship this", or
-  "I'm done with this feature".
+description: Pre-push quality gate — debug scan, lint, tests, branch check, commit, push.
 allowed-tools:
   - Bash
   - Read
@@ -304,7 +297,12 @@ If B: proceed, note "no tests" in the push summary.
 git branch --show-current
 git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null || echo "NO_UPSTREAM"
 git config user.name
+
+# Check if there is an open PR on this branch
+gh pr view --json number,title,state 2>/dev/null || echo "NO_PR"
 ```
+
+Collect: current branch name, upstream status, developer name, and whether an open PR exists.
 
 **Check 1: Is the developer on main/master?**
 
@@ -328,22 +326,25 @@ If `NO_UPSTREAM`:
 
 Note this — Chief will use `-u` flag on the push in Phase 6.
 
-**Check 3: Does the branch name reflect the work?**
+**Check 3: Does the branch name reflect the work? (only if NO open PR)**
 
-Look at the changed files and the diff. If the current branch name is generic
-(`fix`, `update`, `changes`, `dev`, `test`, a ticket number with no description,
-or clearly doesn't match the actual changes):
+If an open PR exists on this branch — **skip this check entirely**. The branch is already
+public and tied to a PR; renaming it now would break the PR and confuse reviewers.
 
-> "Branch name is `[name]` but looking at what you changed, this seems to be about
-> [inferred topic]. Branch names should describe the work so the team knows what's in it.
+If there is NO open PR: look at the changed files and the diff. If the current branch name
+is generic (`fix`, `update`, `changes`, `dev`, `test`, a ticket number with no description,
+or clearly doesn't match the actual changes), act immediately — don't just suggest:
+
+> "Branch name is `[current-name]` but looking at what you changed, this is about
+> [inferred topic]. I'm going to create a matching branch.
 >
 > Suggested: `[developer-name]/[what-was-worked-on]`
 >
-> A) Rename to the suggested name
-> B) Suggest a different name — tell me what to call it
-> C) Keep `[current name]` — it's fine
+> A) Create that branch — move my work there now
+> B) Give it a different name — I'll tell you what to call it
+> C) Keep `[current-name]` — it's fine
 >
-> RECOMMENDATION: Choose A."
+> RECOMMENDATION: Choose A. A branch name is how the team knows what's inside."
 
 **Branch naming convention:**
 ```
@@ -355,10 +356,22 @@ or clearly doesn't match the actual changes):
   short and descriptive (e.g. `add-user-authentication`, `fix-payment-timeout`,
   `refactor-api-error-handling`)
 
+If A or B (new branch name approved):
 ```bash
-# Rename branch if approved
-git branch -m [new-name]
+# Create a new branch at the current HEAD — all commits come with it
+git checkout -b [new-name]
+
+# If the old branch had a remote tracking branch, offer to delete it
+git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null
 ```
+
+If the old branch had an upstream, ask:
+> "Old remote branch `origin/[old-name]` still exists. Want me to delete it?
+> A) Delete it — it's been replaced
+> B) Leave it — I'll handle it later"
+
+If A: `git push origin --delete [old-name]`
+If B: note it, continue on the new branch.
 
 ---
 
@@ -564,7 +577,7 @@ Files:       4 changed, 127 insertions, 12 deletions
 Phase 1 — Debug scan:   ✓ 2 statements removed
 Phase 2 — Lint:         ✓ 0 errors
 Phase 3 — Tests:        ✓ 47 passed, 0 failed
-Phase 4 — Branch:       ✓ upstream set
+Phase 4 — Branch:       ✓ upstream set (or "✓ created [new-name] — matched to work")
 Phase 4.5 — Version:    ✓ bumped to v0.8.6 (or "⚠ skipped — [reason]")
 Phase 5 — Commit:       ✓ conventional commit
 Phase 6 — Push:         ✓ pushed to origin

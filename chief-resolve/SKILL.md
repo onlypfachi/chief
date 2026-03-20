@@ -1,13 +1,7 @@
 ---
 name: chief-resolve
 version: 1.0.0
-description: |
-  PR review resolver. Finds the open PR on the current branch, pulls all
-  reviewer comments, and works through them one by one with the developer —
-  showing each comment in context, discussing it, implementing fixes, and
-  optionally replying on GitHub to mark it addressed.
-  Use when asked to "resolve PR comments", "work through review feedback",
-  "address review", or "fix what the reviewer said".
+description: PR review resolver — works through reviewer comments one by one and implements fixes.
 allowed-tools:
   - Bash
   - Read
