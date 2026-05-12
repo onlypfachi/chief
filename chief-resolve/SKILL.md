@@ -100,8 +100,7 @@ Found [N] comment(s) to work through:
 Reviewers: [list of unique reviewer names]
 ```
 
-Then: "Ready to go through them? I'll take them one at a time."
-Wait for the developer to say yes before starting Phase 2.
+Then proceed directly to Phase 2 — no confirmation gate needed.
 
 ---
 
@@ -184,21 +183,34 @@ After the discussion, loop back to the action choice: "So what do you want to do
 
 **If C — Defer it:**
 
-Ask: "One line — why are we deferring? I'll note it." Add a note to the session log. Move on.
+Ask via AskUserQuestion:
+> "Why are we deferring?
+>
+> A) Scope creep — out of bounds for this PR
+> B) Low priority — valid but not urgent
+> C) Will fix in follow-up PR
+> D) Other — I'll explain in the PR comment"
+
+Note the selection in the session log. Move on.
 
 **If D — Dismiss it:**
 
-Chief doesn't rubber-stamp dismissals. Ask once:
-> "Fair enough — what's the reason? If you want I can help you draft a reply explaining the decision."
+Chief doesn't rubber-stamp dismissals. Ask once via AskUserQuestion:
+> "Dismissing it — what's the reason?
+>
+> A) Already handled differently in the code
+> B) Design decision — intentional trade-off
+> C) Out of scope for this PR
+> D) Draft a reply for me — I'll explain it to the reviewer"
 
-If they want a reply drafted:
+If D is selected, draft and post the reply via GitHub API:
 ```bash
 gh api repos/{owner}/{repo}/pulls/{pr_number}/comments/{comment_id}/replies \
   --method POST \
   --field body="[drafted reply explaining the decision, in the developer's voice]"
 ```
 
-Then move on.
+Otherwise note the reason and move on.
 
 ---
 
@@ -221,11 +233,14 @@ Files changed: [list of files touched during this session]
 ───────────────────────────────────────
 ```
 
-If any fixes were made, ask:
-> "Want to run `/chief-push` to commit and push these fixes now?"
+If any fixes were made, ask via AskUserQuestion:
+> "Fixes are in. Ready to push?
+>
+> A) Yes — run /chief-push now
+> B) Not yet — I'll push when I'm ready"
 
-If yes: hand off to `/chief-push`.
-If no: "No problem — run it when you're ready."
+If A: hand off to `/chief-push`.
+If B: "No problem — run `/chief-push` when you're ready."
 
 ---
 
