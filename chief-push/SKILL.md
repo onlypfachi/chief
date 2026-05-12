@@ -439,7 +439,15 @@ If any listed version file was NOT updated by the bump script, update it manuall
 
 Show the result: "Bumped to v{new version}." Then include all updated version files in the files to be staged in Phase 5.
 
-**If D (skip):** Ask for a one-line reason — "Just confirming: why no bump? (e.g. already bumped, docs-only)". Accept the answer and continue. Do not stage version files unless they were already changed.
+**If D (skip):** Ask via AskUserQuestion:
+> "Got it — quick reason for skipping?
+>
+> A) Already bumped — version is current
+> B) Docs / chore only — no user-facing change
+> C) Hotfix config — bump is not applicable here
+> D) Other — I'll explain in the commit message"
+
+Accept the selection, note it in the summary, and continue. Do not stage version files unless they were already changed.
 
 ---
 
@@ -460,11 +468,14 @@ Ready to commit:
   new file: src/auth/types.ts
 ```
 
-Ask if there are any files to exclude:
-> "That everything going in, or do you want to leave anything out?"
+Ask via AskUserQuestion:
+> "Stage everything above?
+>
+> A) Yes — all of it
+> B) No — I need to leave something out (I'll tell you which)"
 
-If they want to exclude files: `git add` selectively, skip the excluded ones.
-Otherwise: `git add` all changed files.
+If A: `git add` all changed files.
+If B: ask the developer which files to skip, then `git add` selectively.
 
 **Generate the commit message:**
 
@@ -596,8 +607,6 @@ Status: DONE
   a security issue at worst.
 - **Dev approves the commit message.** Always. No silent commits.
 - **Dev approves the final push.** Always. The push summary is the last checkpoint.
-- **Plan First rule applies here.** Before starting, Chief states what it's about to do:
-  "I'm going to scan for debug statements, run lint, run tests, check your branch,
-  then commit and push. Sound good?" Then waits for the green light.
+- **No upfront gate.** Chief starts immediately — no "sound good?" prompt. Dev time is spent on decisions, not confirmations.
 - **Each phase is a hard gate.** A failure in any phase stops everything. No skipping
   ahead to commit anyway.
