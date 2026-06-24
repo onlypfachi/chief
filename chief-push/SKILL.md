@@ -1,7 +1,7 @@
 ---
 name: chief-push
 version: 1.0.0
-description: Pre-push quality gate — debug scan, lint, tests, branch check, commit, push.
+description: Pre-push quality gate — debug scan, lint, tests, branch check, commit, push, and open PR.
 allowed-tools:
   - Bash
   - Read
@@ -15,7 +15,7 @@ allowed-tools:
 # /chief-push — Commit & Push
 
 Chief runs your code through every quality gate before anything leaves your machine.
-Seven phases. All must pass. Dev approves the version bump, the commit, and the final push.
+Eight phases. All must pass. Dev approves the version bump, the commit, and the final push. PR is created automatically after push.
 
 In Chief's voice at the start:
 > "Alright, let's get this pushed. I'm gonna run through the checklist first —
@@ -561,8 +561,7 @@ git push
 git push -u origin $(git branch --show-current)
 ```
 
-Show the push output. If push succeeds, Chief wraps up in its voice:
-> "Pushed. You're live on [branch]. Nice work."
+Show the push output. If push succeeds, proceed to Phase 7.
 
 If push fails (rejected, conflicts, auth):
 Show the error clearly. Help the developer understand what went wrong.
@@ -571,6 +570,70 @@ Common cases:
   Run `git pull --rebase` if approved.
 - Auth failure: "Git credentials issue — check your SSH key or token."
 - Protected branch: "This branch is protected — you'll need a PR instead of a direct push."
+
+---
+
+## Phase 7: Pull Request
+
+After a successful push, check whether a PR already exists for this branch:
+
+```bash
+gh pr view --json number,title,url,state 2>/dev/null || echo "NO_PR"
+```
+
+**If a PR already exists:** note its URL and skip to the Push Summary.
+
+**If no PR exists:** create one automatically. Do NOT ask the user for the title or body.
+
+Gather everything needed from the diff:
+
+```bash
+# Full diff against the base branch
+gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name' 2>/dev/null || echo "main"
+git log --oneline origin/$(gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name' 2>/dev/null || echo "main")..HEAD 2>/dev/null
+git diff origin/$(gh repo view --json defaultBranchRef --jq '.defaultBranchRef.name' 2>/dev/null || echo "main")...HEAD --stat 2>/dev/null
+```
+
+From the commits and diff, synthesize:
+
+**PR Title** — follow conventional commit format, summarise the whole branch in one line (under 72 chars):
+- Lead with the type if clear: `feat:`, `fix:`, `refactor:`, etc.
+- Describe the user-facing outcome, not the implementation detail.
+- Example: `feat(auth): add JWT refresh token rotation`
+
+**PR Body** — structured as:
+
+```markdown
+## Summary
+- <bullet: what changed and why — user-facing outcome>
+- <bullet: second notable change if any>
+- <bullet: third if needed — otherwise omit>
+
+## What to review
+- <specific area or file worth a reviewer's attention>
+- <any tradeoff or decision that deserves eyes>
+
+## Test plan
+- [ ] <how to manually verify the main change>
+- [ ] <edge case to check if applicable>
+```
+
+Rules for the body:
+- Write from the reviewer's perspective — what do they need to understand this change?
+- Lead bullets with impact ("Users can now…", "Fixes…", "Removes…"), not mechanics ("Changed X to Y").
+- Keep it scannable — no prose paragraphs.
+- If the diff is a single-commit trivial change, the body can be short (2–3 bullets total).
+
+Create the PR:
+
+```bash
+gh pr create \
+  --title "[generated title]" \
+  --body "[generated body]"
+```
+
+After the PR is created, output the URL and announce in Chief's voice:
+> "Pushed and PR open: [PR URL]"
 
 ---
 
@@ -592,6 +655,7 @@ Phase 4 — Branch:       ✓ upstream set (or "✓ created [new-name] — match
 Phase 4.5 — Version:    ✓ bumped to v0.8.6 (or "⚠ skipped — [reason]")
 Phase 5 — Commit:       ✓ conventional commit
 Phase 6 — Push:         ✓ pushed to origin
+Phase 7 — PR:           ✓ created [PR URL] (or "✓ already open [PR URL]")
 
 Status: DONE
 ───────────────────────────────────────
@@ -607,6 +671,7 @@ Status: DONE
   a security issue at worst.
 - **Dev approves the commit message.** Always. No silent commits.
 - **Dev approves the final push.** Always. The push summary is the last checkpoint.
+- **PR is created automatically.** Chief generates the title and body from the diff — no prompting for either. If a PR already exists, skip creation.
 - **No upfront gate.** Chief starts immediately — no "sound good?" prompt. Dev time is spent on decisions, not confirmations.
 - **Each phase is a hard gate.** A failure in any phase stops everything. No skipping
   ahead to commit anyway.
