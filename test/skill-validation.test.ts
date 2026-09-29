@@ -635,6 +635,15 @@ describe('investigate skill structure', () => {
   }
 });
 
+describe('chief-cook skill structure', () => {
+  const content = fs.readFileSync(path.join(ROOT, 'chief-cook', 'SKILL.md'), 'utf-8');
+
+  test('preamble prompts never pause a hands-off run', () => {
+    expect(content).toContain('the preamble never stops the run');
+    expect(content).toContain('Do not ask\nthe upgrade question');
+  });
+});
+
 describe('chief-structure-review skill structure', () => {
   const content = fs.readFileSync(path.join(ROOT, 'chief-structure-review', 'SKILL.md'), 'utf-8');
   for (const section of ['EnterPlanMode', 'ExitPlanMode', 'Structure conventions',
