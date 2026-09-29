@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'bun:test';
-import { validateOutputPath } from '../src/meta-commands';
-import { validateReadPath } from '../src/read-commands';
+import { validateOutputPath, validateReadPath } from '../src/path-validation';
 
 describe('validateOutputPath', () => {
   it('allows paths within /tmp', () => {

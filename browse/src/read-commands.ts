@@ -9,7 +9,7 @@ import type { BrowserManager } from './browser-manager';
 import { consoleBuffer, networkBuffer, dialogBuffer } from './buffers';
 import type { Page } from 'playwright';
 import * as fs from 'fs';
-import * as path from 'path';
+import { validateReadPath } from './path-validation';
 
 /** Detect await keyword, ignoring comments. Accepted risk: await in string literals triggers wrapping (harmless). */
 function hasAwait(code: string): boolean {
@@ -33,23 +33,6 @@ function wrapForEvaluate(code: string): string {
   return needsBlockWrapper(trimmed)
     ? `(async()=>{\n${code}\n})()`
     : `(async()=>(${trimmed}))()`;
-}
-
-// Security: Path validation to prevent path traversal attacks
-const SAFE_DIRECTORIES = ['/tmp', process.cwd()];
-
-export function validateReadPath(filePath: string): void {
-  if (path.isAbsolute(filePath)) {
-    const resolved = path.resolve(filePath);
-    const isSafe = SAFE_DIRECTORIES.some(dir => resolved === dir || resolved.startsWith(dir + '/'));
-    if (!isSafe) {
-      throw new Error(`Absolute path must be within: ${SAFE_DIRECTORIES.join(', ')}`);
-    }
-  }
-  const normalized = path.normalize(filePath);
-  if (normalized.includes('..')) {
-    throw new Error('Path traversal sequences (..) are not allowed');
-  }
 }
 
 /**
