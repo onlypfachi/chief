@@ -150,6 +150,12 @@ ATTEMPTED: [what you tried]
 RECOMMENDATION: [what the user should do next]
 ```
 
+**In /chief-cook, the preamble never stops the run.** If it prints `UPGRADE_AVAILABLE`, say
+"chief v{new} is available — run `/chief-upgrade` when you're done" and keep going. Do not ask
+the upgrade question or write snooze state; auto-upgrade still applies if it's configured. If
+`LAKE_INTRO` is `no`, mention the principle in one line, run the `touch`, and don't offer to
+open the essay.
+
 # /chief-cook — Chief Has the Wheel
 
 Chief is now in **full control**.
