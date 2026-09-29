@@ -81,6 +81,32 @@ bun run build          # gen docs + compile binaries
 bun run skill:check    # health dashboard for all skills
 ```
 
+## Structure conventions
+
+Enforced by `/chief-structure-review`. Edit freely; these override its built-in defaults.
+
+**Naming**
+- Source, test and script files are `kebab-case` (`url-validation.ts`, `eval-comparison.test.ts`).
+- A file name must not repeat its folder's role or name (`browse/test/fixture-server.ts`, not `test-server.ts`).
+- A file is named after its primary export (`createLogWriter` → `log-writer.ts`).
+
+**One thing per file**
+- One skill per `SKILL.md.tmpl`. The root template is the `/chief` coaching skill only; the browse
+  reference lives in `browse/SKILL.md.tmpl`.
+- One `{{PLACEHOLDER}}` resolver per file in `scripts/resolvers/`.
+- A shared rule lives in one module (e.g. `browse/src/path-validation.ts`), never copy-pasted across command files.
+
+**Structure**
+- Every skill directory with a `SKILL.md` has a `SKILL.md.tmpl`. Skills are discovered with
+  `scripts/discover-skills.ts`; never add a hand-maintained list of skills.
+- Tests sit next to their subject: `browse/src/x.ts` ↔ `browse/test/x.test.ts`,
+  `test/helpers/x.ts` ↔ `test/helpers/x.test.ts`, and tests for `bin/` scripts and skill hooks go in `test/`.
+
+**Deliberate exceptions**
+- `review/TODOS-format.md` is uppercase to mirror `TODOS.md`.
+- `bin/chief-*` keeps its `chief-` prefix so the commands don't clash with other tools on the PATH.
+- `browse/src/find-browse.ts` is named after the `find-browse` program it builds.
+
 ## Chief Configuration
 
 ### Proactive Skill Suggestions
