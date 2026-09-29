@@ -103,7 +103,7 @@ if [ "$SKILLS_BASENAME" = "skills" ]; then
       printf 'Available skills: /chief, /chief-init, /chief-push, /chief-cook, /office-hours,\n'
       printf '/plan-ceo-review, /plan-eng-review, /plan-design-review, /design-consultation,\n'
       printf '/review, /browse, /qa, /qa-only, /design-review, /setup-browser-cookies,\n'
-      printf '/retro, /investigate, /document-release, /codex, /careful, /freeze, /guard,\n'
+      printf '/retro, /investigate, /chief-structure-review, /document-release, /codex, /careful, /freeze, /guard,\n'
       printf '/unfreeze, /chief-upgrade.\n'
       printf 'If chief skills are not working, run: cd %s && ./setup\n' "$CHIEF_DIR"
     } >> "$CLAUDE_MD"
