@@ -21,7 +21,7 @@ const SKILL_FILES = [
   'browse/SKILL.md',
   'qa/SKILL.md',
   'qa-only/SKILL.md',
-  'ship/SKILL.md',
+  'chief-push/SKILL.md',
   'review/SKILL.md',
   'retro/SKILL.md',
   'plan-ceo-review/SKILL.md',
