@@ -448,7 +448,7 @@ Shipped in v0.8.3. Step 8.5 added to `/ship` — after creating the PR, `/ship` 
 
 ### `{{DOC_VOICE}}` shared resolver
 
-**What:** Create a placeholder resolver in gen-skill-docs.ts encoding the gstack voice guide (friendly, user-forward, lead with benefits). Inject into /chief-push Phase 9, /document-release Step 5, and reference from CLAUDE.md.
+**What:** Create a placeholder resolver in `scripts/resolvers/doc-voice.ts` (registered in gen-skill-docs.ts) encoding the gstack voice guide (friendly, user-forward, lead with benefits). Inject into /chief-push Phase 9, /document-release Step 5, and reference from CLAUDE.md.
 
 **Why:** DRY — voice rules currently live inline in 3 places (CLAUDE.md CHANGELOG style section, /chief-push Phase 9, /document-release Step 5). When the voice evolves, all three drift.
 
