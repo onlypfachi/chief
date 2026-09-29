@@ -8,7 +8,7 @@ import * as fs from 'fs';
 
 const FIXTURES_DIR = path.resolve(import.meta.dir, 'fixtures');
 
-export function startTestServer(port: number = 0): { server: ReturnType<typeof Bun.serve>; url: string } {
+export function startFixtureServer(port: number = 0): { server: ReturnType<typeof Bun.serve>; url: string } {
   const server = Bun.serve({
     port,
     hostname: '127.0.0.1',
@@ -50,7 +50,7 @@ export function startTestServer(port: number = 0): { server: ReturnType<typeof B
 
 // If run directly, start and print URL
 if (import.meta.main) {
-  const { server, url } = startTestServer(9450);
+  const { server, url } = startFixtureServer(9450);
   console.log(`Test server running at ${url}`);
   console.log(`Fixtures: ${FIXTURES_DIR}`);
   console.log('Press Ctrl+C to stop');

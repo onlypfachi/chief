@@ -151,7 +151,7 @@ export const GLOBAL_TOUCHFILES = [
   'test/helpers/llm-judge.ts',
   'scripts/gen-skill-docs.ts',
   'test/helpers/touchfiles.ts',
-  'browse/test/test-server.ts',
+  'browse/test/fixture-server.ts',
 ];
 
 // --- Base branch detection ---

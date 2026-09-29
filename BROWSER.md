@@ -234,7 +234,7 @@ bun test browse/test/snapshot              # run snapshot tests only
 bun test browse/test/cookie-import-browser # run cookie import unit tests only
 ```
 
-Tests spin up a local HTTP server (`browse/test/test-server.ts`) serving HTML fixtures from `browse/test/fixtures/`, then exercise the CLI commands against those pages. 203 tests across 3 files, ~15 seconds total.
+Tests spin up a local HTTP server (`browse/test/fixture-server.ts`) serving HTML fixtures from `browse/test/fixtures/`, then exercise the CLI commands against those pages. 203 tests across 3 files, ~15 seconds total.
 
 ### Source map
 

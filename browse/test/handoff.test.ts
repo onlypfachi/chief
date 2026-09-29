@@ -6,17 +6,17 @@
  */
 
 import { describe, test, expect, beforeAll, afterAll } from 'bun:test';
-import { startTestServer } from './test-server';
+import { startFixtureServer } from './fixture-server';
 import { BrowserManager, type BrowserState } from '../src/browser-manager';
 import { handleWriteCommand } from '../src/write-commands';
 import { handleMetaCommand } from '../src/meta-commands';
 
-let testServer: ReturnType<typeof startTestServer>;
+let testServer: ReturnType<typeof startFixtureServer>;
 let bm: BrowserManager;
 let baseUrl: string;
 
 beforeAll(async () => {
-  testServer = startTestServer(0);
+  testServer = startFixtureServer(0);
   baseUrl = testServer.url;
 
   bm = new BrowserManager();
