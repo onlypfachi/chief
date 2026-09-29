@@ -152,6 +152,7 @@ export const GLOBAL_TOUCHFILES = [
   'test/helpers/llm-judge.ts',
   'scripts/gen-skill-docs.ts',
   'scripts/discover-skills.ts',
+  'scripts/resolvers/**',
   'test/helpers/touchfiles.ts',
   'browse/test/fixture-server.ts',
 ];
