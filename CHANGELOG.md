@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.10.0] - 2026-09-29
+
+### Changed
+
+- **`/ship` is now part of `/chief-push` — one command to get your work out.** `/chief-push` still scans for debug statements, lints, and checks your branch, and now also merges the base branch before testing, sets up a test framework if you don't have one, maps which code paths your tests actually cover (and writes tests for the gaps), reviews the diff and auto-fixes the obvious issues, triages Greptile comments, writes your CHANGELOG entry, ticks off finished TODOs, splits your work into clean commits, opens a PR with coverage and review results in the body, and syncs your docs.
+- **Hands-off mode.** Run `/chief-push auto` and it goes straight through without asking for approvals — it only stops for failing tests, merge conflicts, or decisions that really need you. Plain `/chief-push` still has you approve the version bump, commits, and push.
+
+### Removed
+
+- **`/ship`.** Use `/chief-push` (or `/chief-push auto` for the old hands-off behavior). Re-running `./setup` cleans up the old `/ship` link.
+
 ## [0.8.5] - 2026-03-19
 
 ### Fixed
