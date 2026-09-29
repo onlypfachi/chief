@@ -223,6 +223,7 @@ describe('Update check preamble', () => {
     'design-review/SKILL.md',
     'design-consultation/SKILL.md',
     'document-release/SKILL.md',
+    'chief-structure-review/SKILL.md',
   ];
 
   for (const skill of skillsWithUpdateCheck) {
@@ -535,6 +536,7 @@ describe('v0.4.1 preamble features', () => {
     'design-review/SKILL.md',
     'design-consultation/SKILL.md',
     'document-release/SKILL.md',
+    'chief-structure-review/SKILL.md',
   ];
 
   for (const skill of skillsWithPreamble) {
@@ -654,6 +656,19 @@ describe('investigate skill structure', () => {
   }
 });
 
+describe('chief-structure-review skill structure', () => {
+  const content = fs.readFileSync(path.join(ROOT, 'chief-structure-review', 'SKILL.md'), 'utf-8');
+  for (const section of ['EnterPlanMode', 'ExitPlanMode', 'Structure conventions',
+                          'Framework-reserved', 'ROUTE CHANGE', 'Single Responsibility',
+                          'Dependency Inversion', 'Planned fix', 'STRUCTURE REVIEW']) {
+    test(`contains ${section}`, () => expect(content).toContain(section));
+  }
+
+  test('defers all changes until the plan is approved', () => {
+    expect(content).toContain('Plan before touching');
+  });
+});
+
 // --- Contributor mode preamble structure validation ---
 
 describe('Contributor mode preamble structure', () => {
@@ -668,6 +683,7 @@ describe('Contributor mode preamble structure', () => {
     'design-review/SKILL.md',
     'design-consultation/SKILL.md',
     'document-release/SKILL.md',
+    'chief-structure-review/SKILL.md',
   ];
 
   for (const skill of skillsWithPreamble) {
@@ -756,6 +772,7 @@ describe('Completeness Principle in generated SKILL.md files', () => {
     'design-review/SKILL.md',
     'design-consultation/SKILL.md',
     'document-release/SKILL.md',
+    'chief-structure-review/SKILL.md',
   ];
 
   for (const skill of skillsWithPreamble) {
@@ -1224,7 +1241,7 @@ describe('Skill trigger phrases', () => {
     'qa', 'qa-only', 'chief-push', 'review', 'investigate', 'office-hours',
     'plan-ceo-review', 'plan-eng-review', 'plan-design-review',
     'design-review', 'design-consultation', 'retro', 'document-release',
-    'codex', 'browse', 'setup-browser-cookies',
+    'codex', 'browse', 'setup-browser-cookies', 'chief-structure-review',
   ];
 
   for (const skill of SKILLS_REQUIRING_TRIGGERS) {
@@ -1244,6 +1261,7 @@ describe('Skill trigger phrases', () => {
     'qa', 'qa-only', 'chief-push', 'review', 'investigate', 'office-hours',
     'plan-ceo-review', 'plan-eng-review', 'plan-design-review',
     'design-review', 'design-consultation', 'retro', 'document-release',
+    'chief-structure-review',
   ];
 
   for (const skill of SKILLS_REQUIRING_PROACTIVE) {
