@@ -82,6 +82,7 @@ Chief works with Claude Code and any AI system that supports skills. It multipli
 | `/chief-push` | Commit, push, and open the PR — behind every quality gate. Scans for debug statements, runs lint, merges the base branch, runs tests (bootstraps a framework if you have none), audits test coverage, reviews the diff, bumps the version, writes the CHANGELOG, commits in bisectable chunks, pushes, opens the PR, and syncs your docs. Dev approves the version, commits, and push — or run `/chief-push auto` for hands-off. |
 | `/chief-cook` | Chief takes the wheel. Full autonomy — no plan approvals, no check-ins on file changes, chief makes all the calls. Only hard-stops for destructive operations (deletes, force-push, critical config). Use when you trust chief to handle something end-to-end. |
 | `/chief-resolve` | PR review resolver. Pulls all reviewer comments on the open PR, works through them one by one — shows each in context, discusses it, implements fixes, and optionally replies on GitHub to mark it addressed. |
+| `/chief-structure-review` | Plan-mode audit of file naming, folder structure, one-thing-per-file, and SOLID. Lists every violation with the planned fix, and changes nothing until you approve. |
 
 ### Workflow skills (inherited from gstack, built on)
 
