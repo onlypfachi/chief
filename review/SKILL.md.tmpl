@@ -40,7 +40,7 @@ Before reviewing code quality, check: **did they build what was requested — no
 
 1. Read `TODOS.md` (if it exists). Read PR description (`gh pr view --json body --jq .body 2>/dev/null || true`).
    Read commit messages (`git log origin/<base>..HEAD --oneline`).
-   **If no PR exists:** rely on commit messages and TODOS.md for stated intent — this is the common case since /review runs before /ship creates the PR.
+   **If no PR exists:** rely on commit messages and TODOS.md for stated intent — this is the common case since /review runs before /chief-push creates the PR.
 2. Identify the **stated intent** — what was this branch supposed to accomplish?
 3. Run `git diff origin/<base> --stat` and compare the files changed against the stated intent.
 4. Evaluate with skepticism:
@@ -283,7 +283,7 @@ If Codex is not available, skip this step silently.
 ## Important Rules
 
 - **Read the FULL diff before commenting.** Do not flag issues already addressed in the diff.
-- **Fix-first, not read-only.** AUTO-FIX items are applied directly. ASK items are only applied after user approval. Never commit, push, or create PRs — that's /ship's job.
+- **Fix-first, not read-only.** AUTO-FIX items are applied directly. ASK items are only applied after user approval. Never commit, push, or create PRs — that's /chief-push's job.
 - **Be terse.** One line problem, one line fix. No preamble.
 - **Only flag real problems.** Skip anything that's fine.
 - **Use Greptile reply templates from greptile-triage.md.** Every reply includes evidence. Never post vague replies.

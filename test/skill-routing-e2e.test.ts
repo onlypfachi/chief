@@ -48,7 +48,7 @@ if (evalsEnabled && !process.env.EVALS_ALL) {
 function installSkills(tmpDir: string) {
   const skillDirs = [
     '', // root chief SKILL.md
-    'qa', 'qa-only', 'ship', 'review', 'plan-ceo-review', 'plan-eng-review',
+    'qa', 'qa-only', 'chief-push', 'review', 'plan-ceo-review', 'plan-eng-review',
     'plan-design-review', 'design-review', 'design-consultation', 'retro',
     'document-release', 'investigate', 'office-hours', 'browse', 'setup-browser-cookies',
     'chief-upgrade', 'humanizer',
@@ -401,7 +401,7 @@ export default app;
       run('git', ['commit', '-m', 'feat: waitlist']);
 
       const testName = 'journey-ship';
-      const expectedSkill = 'ship';
+      const expectedSkill = 'chief-push';
       const result = await runSkillTest({
         prompt: "This looks good. Let's get it deployed — push the code up and create a PR.",
         workingDirectory: tmpDir,

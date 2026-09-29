@@ -1577,7 +1577,7 @@ Write your review to ${planDir}/review-output.md`,
 
 // --- Base branch detection smoke tests ---
 
-describeIfSelected('Base branch detection', ['review-base-branch', 'ship-base-branch', 'retro-base-branch'], () => {
+describeIfSelected('Base branch detection', ['review-base-branch', 'chief-push-base-branch', 'retro-base-branch'], () => {
   let baseBranchDir: string;
   const run = (cmd: string, args: string[], cwd: string) =>
     spawnSync(cmd, args, { cwd, stdio: 'pipe', timeout: 5000 });
@@ -1643,8 +1643,8 @@ Write your findings to ${dir}/review-output.md`,
     expect(usedGitDiff).toBe(true);
   }, 120_000);
 
-  testIfSelected('ship-base-branch', async () => {
-    const dir = path.join(baseBranchDir, 'ship-base');
+  testIfSelected('chief-push-base-branch', async () => {
+    const dir = path.join(baseBranchDir, 'chief-push-base');
     fs.mkdirSync(dir, { recursive: true });
 
     // Create git repo with feature branch
@@ -1656,40 +1656,40 @@ Write your findings to ${dir}/review-output.md`,
     run('git', ['add', 'app.ts'], dir);
     run('git', ['commit', '-m', 'initial'], dir);
 
-    run('git', ['checkout', '-b', 'feature/ship-test'], dir);
+    run('git', ['checkout', '-b', 'feature/push-test'], dir);
     fs.writeFileSync(path.join(dir, 'app.ts'), 'console.log("v2");\n');
     run('git', ['add', 'app.ts'], dir);
     run('git', ['commit', '-m', 'feat: update to v2'], dir);
 
-    // Copy ship skill
-    fs.copyFileSync(path.join(ROOT, 'ship', 'SKILL.md'), path.join(dir, 'ship-SKILL.md'));
+    // Copy chief-push skill
+    fs.copyFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), path.join(dir, 'chief-push-SKILL.md'));
 
     const result = await runSkillTest({
-      prompt: `Read ship-SKILL.md for the ship workflow.
+      prompt: `Read chief-push-SKILL.md for the chief-push workflow.
 
-Run ONLY Step 0 (Detect base branch) and Step 1 (Pre-flight) from the ship workflow.
+Run ONLY Step 0 (Detect base branch) and Phase 0 (Get the Lay of the Land) from the chief-push workflow.
 Since there is no remote, gh commands will fail — fall back to main.
 
-After completing Step 0 and Step 1, STOP. Do NOT proceed to Step 2 or beyond.
+After completing Step 0 and Phase 0, STOP. Do NOT proceed to Phase 0.5 or beyond.
 Do NOT push, create PRs, or modify VERSION/CHANGELOG.
 
-Write a summary of what you detected to ${dir}/ship-preflight.md including:
+Write a summary of what you detected to ${dir}/push-preflight.md including:
 - The detected base branch name
 - The current branch name
 - The diff stat against the base branch`,
       workingDirectory: dir,
       maxTurns: 10,
       timeout: 60_000,
-      testName: 'ship-base-branch',
+      testName: 'chief-push-base-branch',
       runId,
     });
 
-    logCost('/ship base-branch', result);
-    recordE2E('/ship base branch detection', 'Base branch detection', result);
+    logCost('/chief-push base-branch', result);
+    recordE2E('/chief-push base branch detection', 'Base branch detection', result);
     expect(result.exitReason).toBe('success');
 
     // Verify preflight output was written
-    const preflightPath = path.join(dir, 'ship-preflight.md');
+    const preflightPath = path.join(dir, 'push-preflight.md');
     if (fs.existsSync(preflightPath)) {
       const content = fs.readFileSync(preflightPath, 'utf-8');
       expect(content.length).toBeGreaterThan(20);
@@ -1871,7 +1871,7 @@ IMPORTANT:
 // Deferred tests — only test.todo entries, no selection needed
 describeE2E('Deferred skill E2E', () => {
   // Ship is destructive: pushes to remote, creates PRs, modifies VERSION/CHANGELOG
-  test.todo('/ship completes full workflow');
+  test.todo('/chief-push completes full workflow');
 
   // Setup-browser-cookies requires interactive browser picker UI
   test.todo('/setup-browser-cookies imports cookies');
@@ -2717,14 +2717,14 @@ This is a test+fix loop: find bugs, fix them, write regression tests, commit eac
 
 // --- Test Coverage Audit E2E ---
 
-describeIfSelected('Test Coverage Audit E2E', ['ship-coverage-audit'], () => {
+describeIfSelected('Test Coverage Audit E2E', ['chief-push-coverage-audit'], () => {
   let coverageDir: string;
 
   beforeAll(() => {
     coverageDir = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-e2e-coverage-'));
 
-    // Copy ship skill files
-    copyDirSync(path.join(ROOT, 'ship'), path.join(coverageDir, 'ship'));
+    // Copy chief-push skill files
+    copyDirSync(path.join(ROOT, 'chief-push'), path.join(coverageDir, 'chief-push'));
     copyDirSync(path.join(ROOT, 'review'), path.join(coverageDir, 'review'));
 
     // Create a Node.js project WITH test framework but coverage gaps
@@ -2740,7 +2740,7 @@ describeIfSelected('Test Coverage Audit E2E', ['ship-coverage-audit'], () => {
     fs.writeFileSync(path.join(coverageDir, 'vitest.config.ts'),
       `import { defineConfig } from 'vitest/config';\nexport default defineConfig({ test: {} });\n`);
 
-    fs.writeFileSync(path.join(coverageDir, 'VERSION'), '0.1.0.0\n');
+    fs.writeFileSync(path.join(coverageDir, 'VERSION'), '0.1.0\n');
     fs.writeFileSync(path.join(coverageDir, 'CHANGELOG.md'), '# Changelog\n');
 
     // Create source file with multiple code paths
@@ -2793,15 +2793,15 @@ describe('processPayment', () => {
     try { fs.rmSync(coverageDir, { recursive: true, force: true }); } catch {}
   });
 
-  test('/ship Step 3.4 produces coverage diagram', async () => {
+  test('/chief-push Phase 6 produces coverage diagram', async () => {
     const result = await runSkillTest({
-      prompt: `Read the file ship/SKILL.md for the ship workflow instructions.
+      prompt: `Read the file chief-push/SKILL.md for the chief-push workflow instructions.
 
 You are on the feature/billing branch. The base branch is main.
 This is a test project — there is no remote, no PR to create.
 
-ONLY run Step 3.4 (Test Coverage Audit) from the ship workflow.
-Skip all other steps (tests, evals, review, version, changelog, commit, push, PR).
+ONLY run Phase 6 (Test Coverage Audit) from the chief-push workflow.
+Skip all other phases (debug scan, lint, tests, review, version, changelog, commit, push, PR).
 
 The source code is in ${coverageDir}/src/billing.ts.
 Existing tests are in ${coverageDir}/test/billing.test.ts.
@@ -2814,12 +2814,12 @@ Output the diagram directly.`,
       maxTurns: 15,
       allowedTools: ['Bash', 'Read', 'Write', 'Edit', 'Glob', 'Grep'],
       timeout: 120_000,
-      testName: 'ship-coverage-audit',
+      testName: 'chief-push-coverage-audit',
       runId,
     });
 
-    logCost('/ship coverage audit', result);
-    recordE2E('/ship Step 3.4 coverage audit', 'Test Coverage Audit E2E', result, {
+    logCost('/chief-push coverage audit', result);
+    recordE2E('/chief-push Phase 6 coverage audit', 'Test Coverage Audit E2E', result, {
       passed: result.exitReason === 'success',
     });
 

@@ -176,7 +176,7 @@ branch name wherever the instructions say "the base branch."
 
 # Document Release: Post-Ship Documentation Update
 
-You are running the `/document-release` workflow. This runs **after `/ship`** (code committed, PR
+You are running the `/document-release` workflow. This runs **after `/chief-push`** (code committed, PR
 exists or about to exist) but **before the PR merges**. Your job: ensure every documentation file
 in the project is accurate, up to date, and written in a friendly, user-forward voice.
 
@@ -321,7 +321,7 @@ preserved them. This skill must NEVER do that.
 **Rules:**
 1. Read the entire CHANGELOG.md first. Understand what is already there.
 2. Only modify wording within existing entries. Never delete, reorder, or replace entries.
-3. Never regenerate a CHANGELOG entry from scratch. The entry was written by `/ship` from the
+3. Never regenerate a CHANGELOG entry from scratch. The entry was written by `/chief-push` from the
    actual diff and commit history. It is the source of truth. You are polishing prose, not
    rewriting history.
 4. If an entry looks wrong or incomplete, use AskUserQuestion — do NOT silently fix it.
@@ -358,7 +358,7 @@ After auditing each file individually, do a cross-doc consistency pass:
 
 ## Step 7: TODOS.md Cleanup
 
-This is a second pass that complements `/ship`'s Step 5.5. Read `review/TODOS-format.md` (if
+This is a second pass that complements `/chief-push`'s Phase 10. Read `review/TODOS-format.md` (if
 available) for the canonical TODO item format.
 
 If TODOS.md does not exist, skip this step.
@@ -493,7 +493,7 @@ Where status is one of:
 - Current — no changes needed
 - Voice polished — wording adjusted
 - Not bumped — user chose to skip
-- Already bumped — version was set by /ship
+- Already bumped — version was set by /chief-push
 - Skipped — file does not exist
 
 ---

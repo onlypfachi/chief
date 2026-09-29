@@ -55,8 +55,10 @@ bin scripts. `package.json` name and description are now chief. Until this lands
 `tadiwa/refactor-gstack-to-chief` and haven't shipped to users yet. Don't treat them
 as stable until the branch merges.
 
-**No E2E evals for chief-native skills.** `chief-push`, `chief-init`, `chief-cook`,
-`chief-resolve` have no automated E2E coverage. Regressions could go undetected.
+**Thin E2E coverage for chief-native skills.** `chief-push` inherited the base-branch and
+coverage-audit E2E tests from the retired `/ship`, but its debug-scan, lint, branch, and
+auto-mode paths are untested. `chief-init`, `chief-cook`, `chief-resolve` have no automated
+E2E coverage. Regressions could go undetected.
 
 ## Engineering Conventions
 
@@ -82,7 +84,7 @@ bun run skill:check    # health dashboard for all skills
 ## Chief Configuration
 
 ### Proactive Skill Suggestions
-All in — suggest skills whenever relevant: `/review`, `/qa`, `/ship`, `/investigate`, `/retro`, etc.
+All in — suggest skills whenever relevant: `/review`, `/qa`, `/chief-push`, `/investigate`, `/retro`, etc.
 
 ### Coaching Focus Areas
 Chief will pay attention to these during code reviews and coaching:
@@ -95,8 +97,7 @@ Chief will pay attention to these during code reviews and coaching:
   to update both atomically. Never edit one without the other.
 
 ### Skills to Prioritize
-- `/chief-push` — quality gate before every push (includes version bump phase)
+- `/chief-push` — quality gates, commit, push, and PR (use `auto` for hands-off)
 - `/chief-resolve` — work through PR review comments before merging
 - `/review` — pre-landing PR review
-- `/ship` — when ready to merge
 - `/retro` — weekly to track chief's own evolution

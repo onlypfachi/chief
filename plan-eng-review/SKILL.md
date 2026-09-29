@@ -456,12 +456,12 @@ After displaying the Review Readiness Dashboard, check if additional reviews wou
 
 **Note staleness** of existing CEO or design reviews if this eng review found assumptions that contradict them, or if the commit hash shows significant drift.
 
-**If no additional reviews are needed** (or `skip_eng_review` is `true` in the dashboard config, meaning this eng review was optional): state "All relevant reviews complete. Run /ship when ready."
+**If no additional reviews are needed** (or `skip_eng_review` is `true` in the dashboard config, meaning this eng review was optional): state "All relevant reviews complete. Run /chief-push when ready."
 
 Use AskUserQuestion with only the applicable options:
 - **A)** Run /plan-design-review (only if UI scope detected and no design review exists)
 - **B)** Run /plan-ceo-review (only if significant product change and no CEO review exists)
-- **C)** Ready to implement — run /ship when done
+- **C)** Ready to implement — run /chief-push when done
 
 ## Unresolved decisions
 If the user does not respond to an AskUserQuestion or interrupts to move on, note which decisions were left unresolved. At the end of the review, list these as "Unresolved decisions that may bite you later" — never silently default to an option.

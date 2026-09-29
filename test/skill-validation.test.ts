@@ -215,7 +215,7 @@ describe('Update check preamble', () => {
     'SKILL.md', 'browse/SKILL.md', 'qa/SKILL.md',
     'qa-only/SKILL.md',
     'setup-browser-cookies/SKILL.md',
-    'ship/SKILL.md', 'review/SKILL.md',
+    'chief-push/SKILL.md', 'review/SKILL.md',
     'plan-ceo-review/SKILL.md', 'plan-eng-review/SKILL.md',
     'retro/SKILL.md',
     'office-hours/SKILL.md', 'investigate/SKILL.md',
@@ -288,7 +288,7 @@ describe('Cross-skill path consistency', () => {
   test('all greptile-history write references specify both per-project and global paths', () => {
     const filesToCheck = [
       'review/SKILL.md',
-      'ship/SKILL.md',
+      'chief-push/SKILL.md',
       'review/greptile-triage.md',
     ];
 
@@ -415,12 +415,12 @@ describe('Greptile history format consistency', () => {
     expect(content).toContain('<category>');
   });
 
-  test('review/SKILL.md and ship/SKILL.md both reference greptile-triage.md for write details', () => {
+  test('review/SKILL.md and chief-push/SKILL.md both reference greptile-triage.md for write details', () => {
     const reviewContent = fs.readFileSync(path.join(ROOT, 'review', 'SKILL.md'), 'utf-8');
-    const shipContent = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+    const pushContent = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
 
     expect(reviewContent.toLowerCase()).toContain('greptile-triage.md');
-    expect(shipContent.toLowerCase()).toContain('greptile-triage.md');
+    expect(pushContent.toLowerCase()).toContain('greptile-triage.md');
   });
 
   test('greptile-triage.md defines all 9 valid categories', () => {
@@ -439,7 +439,7 @@ describe('Greptile history format consistency', () => {
 
 describe('No hardcoded branch names in SKILL templates', () => {
   const tmplFiles = [
-    'ship/SKILL.md.tmpl',
+    'chief-push/SKILL.md.tmpl',
     'review/SKILL.md.tmpl',
     'qa/SKILL.md.tmpl',
     'plan-ceo-review/SKILL.md.tmpl',
@@ -510,11 +510,11 @@ describe('TODOS-format.md reference consistency', () => {
   });
 
   test('skills that write TODOs reference TODOS-format.md', () => {
-    const shipContent = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+    const pushContent = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     const ceoPlanContent = fs.readFileSync(path.join(ROOT, 'plan-ceo-review', 'SKILL.md'), 'utf-8');
     const engPlanContent = fs.readFileSync(path.join(ROOT, 'plan-eng-review', 'SKILL.md'), 'utf-8');
 
-    expect(shipContent).toContain('TODOS-format.md');
+    expect(pushContent).toContain('TODOS-format.md');
     expect(ceoPlanContent).toContain('TODOS-format.md');
     expect(engPlanContent).toContain('TODOS-format.md');
   });
@@ -527,7 +527,7 @@ describe('v0.4.1 preamble features', () => {
     'SKILL.md', 'browse/SKILL.md', 'qa/SKILL.md',
     'qa-only/SKILL.md',
     'setup-browser-cookies/SKILL.md',
-    'ship/SKILL.md', 'review/SKILL.md',
+    'chief-push/SKILL.md', 'review/SKILL.md',
     'plan-ceo-review/SKILL.md', 'plan-eng-review/SKILL.md',
     'retro/SKILL.md',
     'office-hours/SKILL.md', 'investigate/SKILL.md',
@@ -661,7 +661,7 @@ describe('Contributor mode preamble structure', () => {
     'SKILL.md', 'browse/SKILL.md', 'qa/SKILL.md',
     'qa-only/SKILL.md',
     'setup-browser-cookies/SKILL.md',
-    'ship/SKILL.md', 'review/SKILL.md',
+    'chief-push/SKILL.md', 'review/SKILL.md',
     'plan-ceo-review/SKILL.md', 'plan-eng-review/SKILL.md',
     'retro/SKILL.md',
     'plan-design-review/SKILL.md',
@@ -728,17 +728,17 @@ describe('Enum & Value Completeness in review checklist', () => {
     expect(enumLine!.trimStart().startsWith('├─') || enumLine!.trimStart().startsWith('└─')).toBe(true);
   });
 
-  test('Fix-First Heuristic exists in checklist and is referenced by review + ship', () => {
+  test('Fix-First Heuristic exists in checklist and is referenced by review + chief-push', () => {
     expect(checklist).toContain('## Fix-First Heuristic');
     expect(checklist).toContain('AUTO-FIX');
     expect(checklist).toContain('ASK');
 
     const reviewSkill = fs.readFileSync(path.join(ROOT, 'review/SKILL.md'), 'utf-8');
-    const shipSkill = fs.readFileSync(path.join(ROOT, 'ship/SKILL.md'), 'utf-8');
+    const pushSkill = fs.readFileSync(path.join(ROOT, 'chief-push/SKILL.md'), 'utf-8');
     expect(reviewSkill).toContain('AUTO-FIX');
     expect(reviewSkill).toContain('[AUTO-FIXED]');
-    expect(shipSkill).toContain('AUTO-FIX');
-    expect(shipSkill).toContain('[AUTO-FIXED]');
+    expect(pushSkill).toContain('AUTO-FIX');
+    expect(pushSkill).toContain('[AUTO-FIXED]');
   });
 });
 
@@ -749,7 +749,7 @@ describe('Completeness Principle in generated SKILL.md files', () => {
     'SKILL.md', 'browse/SKILL.md', 'qa/SKILL.md',
     'qa-only/SKILL.md',
     'setup-browser-cookies/SKILL.md',
-    'ship/SKILL.md', 'review/SKILL.md',
+    'chief-push/SKILL.md', 'review/SKILL.md',
     'plan-ceo-review/SKILL.md', 'plan-eng-review/SKILL.md',
     'retro/SKILL.md',
     'plan-design-review/SKILL.md',
@@ -920,10 +920,10 @@ describe('Test Bootstrap ({{TEST_BOOTSTRAP}}) integration', () => {
     expect(content).toContain('CLAUDE.md');
   });
 
-  test('TEST_BOOTSTRAP appears in ship/SKILL.md', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+  test('TEST_BOOTSTRAP appears in chief-push/SKILL.md', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     expect(content).toContain('Test Framework Bootstrap');
-    expect(content).toContain('Step 2.5');
+    expect(content).toContain('Phase 5: Tests');
   });
 
   test('TEST_BOOTSTRAP appears in design-review/SKILL.md', () => {
@@ -968,12 +968,12 @@ describe('Test Bootstrap ({{TEST_BOOTSTRAP}}) integration', () => {
     expect(content).toContain('100% test coverage');
   });
 
-  test('WebSearch is in allowed-tools for qa, ship, design-review', () => {
+  test('WebSearch is in allowed-tools for qa, chief-push, design-review', () => {
     const qa = fs.readFileSync(path.join(ROOT, 'qa', 'SKILL.md'), 'utf-8');
-    const ship = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+    const push = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     const qaDesign = fs.readFileSync(path.join(ROOT, 'design-review', 'SKILL.md'), 'utf-8');
     expect(qa).toContain('WebSearch');
-    expect(ship).toContain('WebSearch');
+    expect(push).toContain('WebSearch');
     expect(qaDesign).toContain('WebSearch');
   });
 });
@@ -1017,52 +1017,52 @@ describe('Phase 8e.5 regression test generation', () => {
 
 // --- Step 3.4 coverage audit validation ---
 
-describe('Step 3.4 test coverage audit', () => {
-  test('ship/SKILL.md contains Step 3.4', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
-    expect(content).toContain('Step 3.4: Test Coverage Audit');
+describe('chief-push Phase 6 test coverage audit', () => {
+  test('chief-push/SKILL.md contains Phase 6 coverage audit', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
+    expect(content).toContain('Phase 6: Test Coverage Audit');
     expect(content).toContain('CODE PATH COVERAGE');
   });
 
-  test('Step 3.4 includes quality scoring rubric', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+  test('Phase 6 coverage audit includes quality scoring rubric', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     expect(content).toContain('★★★');
     expect(content).toContain('★★');
     expect(content).toContain('edge cases AND error paths');
     expect(content).toContain('happy path only');
   });
 
-  test('Step 3.4 includes before/after test count', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+  test('Phase 6 coverage audit includes before/after test count', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     expect(content).toContain('Count test files before');
     expect(content).toContain('Count test files after');
   });
 
-  test('ship PR body includes Test Coverage section', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+  test('chief-push PR body includes Test Coverage section', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     expect(content).toContain('## Test Coverage');
   });
 
-  test('ship rules include test generation rule', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
-    expect(content).toContain('Step 3.4 generates coverage tests');
+  test('chief-push rules include test generation rule', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
+    expect(content).toContain('The coverage audit (Phase 6) generates coverage tests');
     expect(content).toContain('Never commit failing tests');
   });
 
-  test('Step 3.4 includes vibe coding philosophy', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+  test('Phase 6 coverage audit includes vibe coding philosophy', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     expect(content).toContain('vibe coding becomes yolo coding');
   });
 
-  test('Step 3.4 traces actual codepaths, not just syntax', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+  test('Phase 6 coverage audit traces actual codepaths, not just syntax', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     expect(content).toContain('Trace every codepath');
     expect(content).toContain('Trace data flow');
     expect(content).toContain('Diagram the execution');
   });
 
-  test('Step 3.4 maps user flows and interaction edge cases', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+  test('Phase 6 coverage audit maps user flows and interaction edge cases', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     expect(content).toContain('Map user flows');
     expect(content).toContain('Interaction edge cases');
     expect(content).toContain('Double-click');
@@ -1071,8 +1071,8 @@ describe('Step 3.4 test coverage audit', () => {
     expect(content).toContain('Empty/zero/boundary states');
   });
 
-  test('Step 3.4 diagram includes USER FLOW COVERAGE section', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+  test('Phase 6 coverage audit diagram includes USER FLOW COVERAGE section', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     expect(content).toContain('USER FLOW COVERAGE');
     expect(content).toContain('Code paths:');
     expect(content).toContain('User flows:');
@@ -1194,8 +1194,8 @@ describe('Codex skill', () => {
     expect(content).toContain('adversarial');
   });
 
-  test('codex integration in /ship offers review gate', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+  test('codex integration in /chief-push offers review gate', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     expect(content).toContain('Codex');
     expect(content).toContain('codex review');
     expect(content).toContain('codex-review');
@@ -1208,7 +1208,7 @@ describe('Codex skill', () => {
   });
 
   test('Review Readiness Dashboard includes Codex Review row', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     expect(content).toContain('Codex Review');
     expect(content).toContain('codex-review');
   });
@@ -1221,7 +1221,7 @@ describe('Skill trigger phrases', () => {
   // Excluded: root chief (browser tool), chief-upgrade (chief-specific),
   // humanizer (text tool)
   const SKILLS_REQUIRING_TRIGGERS = [
-    'qa', 'qa-only', 'ship', 'review', 'investigate', 'office-hours',
+    'qa', 'qa-only', 'chief-push', 'review', 'investigate', 'office-hours',
     'plan-ceo-review', 'plan-eng-review', 'plan-design-review',
     'design-review', 'design-consultation', 'retro', 'document-release',
     'codex', 'browse', 'setup-browser-cookies',
@@ -1241,7 +1241,7 @@ describe('Skill trigger phrases', () => {
 
   // Skills with proactive triggers should have "Proactively suggest" in description
   const SKILLS_REQUIRING_PROACTIVE = [
-    'qa', 'qa-only', 'ship', 'review', 'investigate', 'office-hours',
+    'qa', 'qa-only', 'chief-push', 'review', 'investigate', 'office-hours',
     'plan-ceo-review', 'plan-eng-review', 'plan-design-review',
     'design-review', 'design-consultation', 'retro', 'document-release',
   ];

@@ -70,11 +70,11 @@ gstack/                          <- your working tree
 ├── .claude/skills/              <- created by dev-setup (gitignored)
 │   ├── gstack -> ../../         <- symlink back to repo root
 │   ├── review -> gstack/review
-│   ├── ship -> gstack/ship
+│   ├── chief-push -> gstack/chief-push
 │   └── ...                      <- one symlink per skill
 ├── review/
 │   └── SKILL.md                 <- edit this, test with /review
-├── ship/
+├── chief-push/
 │   └── SKILL.md
 ├── browse/
 │   ├── src/                     <- TypeScript source
@@ -243,7 +243,7 @@ When Conductor creates a new workspace, `bin/dev-setup` runs automatically. It d
 ## Things to know
 
 - **SKILL.md files are generated.** Edit the `.tmpl` template, not the `.md`. Run `bun run gen:skill-docs` to regenerate.
-- **TODOS.md is the unified backlog.** Organized by skill/component with P0-P4 priorities. `/ship` auto-detects completed items. All planning/review/retro skills read it for context.
+- **TODOS.md is the unified backlog.** Organized by skill/component with P0-P4 priorities. `/chief-push` auto-detects completed items. All planning/review/retro skills read it for context.
 - **Browse source changes need a rebuild.** If you touch `browse/src/*.ts`, run `bun run build`.
 - **Dev mode shadows your global install.** Project-local skills take priority over `~/.claude/skills/gstack`. `bin/dev-teardown` restores the global one.
 - **Conductor workspaces are independent.** Each workspace is its own git worktree. `bin/dev-setup` runs automatically via `conductor.json`.
@@ -292,7 +292,7 @@ This affects all projects. To revert: `git checkout main && git pull && bun run 
 When you're happy with your skill edits:
 
 ```bash
-/ship
+/chief-push
 ```
 
-This runs tests, reviews the diff, triages Greptile comments (with 2-tier escalation), manages TODOS.md, bumps the version, and opens a PR. See `ship/SKILL.md` for the full workflow.
+This runs tests, reviews the diff, triages Greptile comments (with 2-tier escalation), manages TODOS.md, bumps the version, and opens a PR. See `chief-push/SKILL.md` for the full workflow.

@@ -39,10 +39,10 @@ gh pr view --json number,title,url,state,reviewDecision,comments,reviews 2>/dev/
 **If no open PR found:**
 > "No open PR for this branch. Either it hasn't been pushed yet, or there's no PR open.
 >
-> A) Create a PR now — I'll run `/ship` to set it up
+> A) Create a PR now — I'll run `/chief-push` to set it up
 > B) Cancel — I'll sort it manually"
 
-If A: hand off to `/ship`. Stop after PR is created and tell user to run `/chief-resolve` again once reviewers have left comments.
+If A: hand off to `/chief-push`. Stop after PR is created and tell user to run `/chief-resolve` again once reviewers have left comments.
 If B: STOP. Status: NEEDS_CONTEXT.
 
 **If PR found but state is not `OPEN`:**

@@ -79,7 +79,7 @@ Chief works with Claude Code and any AI system that supports skills. It multipli
 |-------|-------------|
 | `/chief` | Your dev mate. Coaching session: audits recent work, names patterns, gives you one concrete focus for the week. Starts every session in plan mode — lays out what it's going to do and waits for your go-ahead. |
 | `/chief-init` | One-time project setup. Detects your stack, interviews you for what can't be inferred, writes `CHIEF.md` — the context file chief reads at the start of every session. |
-| `/chief-push` | Pre-push quality gate. Scans for debug statements, runs lint, runs tests, checks your branch name, commits with conventional commit format, then pushes. Dev approves the commit and the push. |
+| `/chief-push` | Commit, push, and open the PR — behind every quality gate. Scans for debug statements, runs lint, merges the base branch, runs tests (bootstraps a framework if you have none), audits test coverage, reviews the diff, bumps the version, writes the CHANGELOG, commits in bisectable chunks, pushes, opens the PR, and syncs your docs. Dev approves the version, commits, and push — or run `/chief-push auto` for hands-off. |
 | `/chief-cook` | Chief takes the wheel. Full autonomy — no plan approvals, no check-ins on file changes, chief makes all the calls. Only hard-stops for destructive operations (deletes, force-push, critical config). Use when you trust chief to handle something end-to-end. |
 | `/chief-resolve` | PR review resolver. Pulls all reviewer comments on the open PR, works through them one by one — shows each in context, discusses it, implements fixes, and optionally replies on GitHub to mark it addressed. |
 
@@ -97,7 +97,6 @@ Chief works with Claude Code and any AI system that supports skills. It multipli
 | `/design-review` | Visual design audit then fixes what it finds. Before/after screenshots, atomic commits. |
 | `/qa` | Browser-based QA. Opens real Chromium, clicks through flows, finds bugs, fixes them, generates regression tests. |
 | `/qa-only` | Same as `/qa` but report only — no code changes. |
-| `/ship` | Release workflow. Sync main, run tests, coverage audit, push, open PR. |
 | `/document-release` | Post-ship doc sync. Updates README, ARCHITECTURE, CLAUDE.md, TODOS to match what shipped. |
 | `/retro` | Weekly engineering retrospective. Per-person breakdowns, shipping streaks, test health trends. |
 | `/browse` | Headless Chromium browser for the AI. Real clicks, real screenshots, ~100ms per command. |
