@@ -3,6 +3,7 @@ import { COMMAND_DESCRIPTIONS } from '../browse/src/commands';
 import { SNAPSHOT_FLAGS } from '../browse/src/snapshot';
 import * as fs from 'fs';
 import * as path from 'path';
+import { discoverSkillDirs } from '../scripts/discover-skills';
 
 const ROOT = path.resolve(import.meta.dir, '..');
 
@@ -56,29 +57,8 @@ describe('gen-skill-docs', () => {
     }
   });
 
-  // All skills that must have templates — single source of truth
-  const ALL_SKILLS = [
-    { dir: '.', name: 'root chief' },
-    { dir: 'browse', name: 'browse' },
-    { dir: 'qa', name: 'qa' },
-    { dir: 'qa-only', name: 'qa-only' },
-    { dir: 'review', name: 'review' },
-    { dir: 'chief-push', name: 'chief-push' },
-    { dir: 'plan-ceo-review', name: 'plan-ceo-review' },
-    { dir: 'plan-eng-review', name: 'plan-eng-review' },
-    { dir: 'retro', name: 'retro' },
-    { dir: 'setup-browser-cookies', name: 'setup-browser-cookies' },
-    { dir: 'chief-upgrade', name: 'chief-upgrade' },
-    { dir: 'plan-design-review', name: 'plan-design-review' },
-    { dir: 'chief-structure-review', name: 'chief-structure-review' },
-    { dir: 'design-review', name: 'design-review' },
-    { dir: 'design-consultation', name: 'design-consultation' },
-    { dir: 'document-release', name: 'document-release' },
-    { dir: 'careful', name: 'careful' },
-    { dir: 'freeze', name: 'freeze' },
-    { dir: 'guard', name: 'guard' },
-    { dir: 'unfreeze', name: 'unfreeze' },
-  ];
+  // Every installed skill (any directory with a SKILL.md) — must be generated from a template
+  const ALL_SKILLS = discoverSkillDirs(ROOT).map(dir => ({ dir, name: dir === '.' ? 'root chief' : dir }));
 
   test('every skill has a SKILL.md.tmpl template', () => {
     for (const skill of ALL_SKILLS) {
