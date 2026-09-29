@@ -403,7 +403,7 @@ describeIfSelected('Cross-skill consistency evals', ['cross-skill greptile consi
   testIfSelected('cross-skill greptile consistency', async () => {
     const t0 = Date.now();
     const reviewContent = fs.readFileSync(path.join(ROOT, 'review', 'SKILL.md'), 'utf-8');
-    const shipContent = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+    const pushContent = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     const triageContent = fs.readFileSync(path.join(ROOT, 'review', 'greptile-triage.md'), 'utf-8');
     const retroContent = fs.readFileSync(path.join(ROOT, 'retro', 'SKILL.md'), 'utf-8');
 
@@ -416,7 +416,7 @@ describeIfSelected('Cross-skill consistency evals', ['cross-skill greptile consi
 
     const collected = [
       extractGrepLines(reviewContent, 'review/SKILL.md'),
-      extractGrepLines(shipContent, 'ship/SKILL.md'),
+      extractGrepLines(pushContent, 'chief-push/SKILL.md'),
       extractGrepLines(triageContent, 'review/greptile-triage.md'),
       extractGrepLines(retroContent, 'retro/SKILL.md'),
     ].join('\n\n');
@@ -425,8 +425,8 @@ describeIfSelected('Cross-skill consistency evals', ['cross-skill greptile consi
 
 INTENDED ARCHITECTURE:
 - greptile-history has TWO paths: per-project (~/.chief/projects/{slug}/greptile-history.md) and global (~/.chief/greptile-history.md)
-- /review and /ship WRITE to BOTH paths (per-project for suppressions, global for retro aggregation)
-- /review and /ship delegate write mechanics to greptile-triage.md
+- /review and /chief-push WRITE to BOTH paths (per-project for suppressions, global for retro aggregation)
+- /review and /chief-push delegate write mechanics to greptile-triage.md
 - /retro READS from the GLOBAL path only (it aggregates across all projects)
 - REMOTE_SLUG derivation should be consistent across files that use it
 
@@ -586,15 +586,15 @@ ${section}`);
 }
 
 // Block 1: Ship & Release skills
-describeIfSelected('Ship & Release skill evals', ['ship/SKILL.md workflow', 'document-release/SKILL.md workflow'], () => {
-  testIfSelected('ship/SKILL.md workflow', async () => {
+describeIfSelected('Ship & Release skill evals', ['chief-push/SKILL.md workflow', 'document-release/SKILL.md workflow'], () => {
+  testIfSelected('chief-push/SKILL.md workflow', async () => {
     await runWorkflowJudge({
-      testName: 'ship/SKILL.md workflow',
+      testName: 'chief-push/SKILL.md workflow',
       suite: 'Ship & Release skill evals',
-      skillPath: 'ship/SKILL.md',
-      startMarker: '# Ship:',
+      skillPath: 'chief-push/SKILL.md',
+      startMarker: '# /chief-push',
       endMarker: '## Important Rules',
-      judgeContext: 'a ship/release workflow document',
+      judgeContext: 'a commit/push/release workflow document',
       judgeGoal: 'how to create a PR: merge base branch, run tests, review diff, bump version, update changelog, push, and open PR',
     });
   }, 30_000);

@@ -63,7 +63,6 @@ describe('gen-skill-docs', () => {
     { dir: 'qa', name: 'qa' },
     { dir: 'qa-only', name: 'qa-only' },
     { dir: 'review', name: 'review' },
-    { dir: 'ship', name: 'ship' },
     { dir: 'chief-push', name: 'chief-push' },
     { dir: 'plan-ceo-review', name: 'plan-ceo-review' },
     { dir: 'plan-eng-review', name: 'plan-eng-review' },
@@ -176,8 +175,7 @@ describe('gen-skill-docs', () => {
   test('preamble-using skills have correct skill name in telemetry', () => {
     const PREAMBLE_SKILLS = [
       { dir: '.', name: 'chief' },
-      { dir: 'ship', name: 'ship' },
-      { dir: 'review', name: 'review' },
+        { dir: 'review', name: 'review' },
       { dir: 'qa', name: 'qa' },
       { dir: 'retro', name: 'retro' },
     ];
@@ -244,23 +242,23 @@ describe('gen-skill-docs', () => {
 });
 
 describe('BASE_BRANCH_DETECT resolver', () => {
-  // Find a generated SKILL.md that uses the placeholder (ship is guaranteed to)
-  const shipContent = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+  // Find a generated SKILL.md that uses the placeholder (chief-push is guaranteed to)
+  const pushContent = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
 
   test('resolver output contains PR base detection command', () => {
-    expect(shipContent).toContain('gh pr view --json baseRefName');
+    expect(pushContent).toContain('gh pr view --json baseRefName');
   });
 
   test('resolver output contains repo default branch detection command', () => {
-    expect(shipContent).toContain('gh repo view --json defaultBranchRef');
+    expect(pushContent).toContain('gh repo view --json defaultBranchRef');
   });
 
   test('resolver output contains fallback to main', () => {
-    expect(shipContent).toMatch(/fall\s*back\s+to\s+`main`/i);
+    expect(pushContent).toMatch(/fall\s*back\s+to\s+`main`/i);
   });
 
   test('resolver output uses "the base branch" phrasing', () => {
-    expect(shipContent).toContain('the base branch');
+    expect(pushContent).toContain('the base branch');
   });
 });
 
@@ -360,8 +358,8 @@ describe('REVIEW_DASHBOARD resolver', () => {
     });
   }
 
-  test('review dashboard appears in ship generated file', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+  test('review dashboard appears in chief-push generated file', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     expect(content).toContain('reviews.jsonl');
     expect(content).toContain('REVIEW READINESS DASHBOARD');
   });
@@ -418,8 +416,8 @@ describe('REVIEW_DASHBOARD resolver', () => {
     expect(content).toContain('/plan-ceo-review');
   });
 
-  test('ship does NOT contain review chaining', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'ship', 'SKILL.md'), 'utf-8');
+  test('chief-push does NOT contain review chaining', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'chief-push', 'SKILL.md'), 'utf-8');
     expect(content).not.toContain('Review Chaining');
   });
 });

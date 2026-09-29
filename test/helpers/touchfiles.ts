@@ -63,8 +63,8 @@ export const E2E_TOUCHFILES: Record<string, string[]> = {
   'plan-eng-review':           ['plan-eng-review/**'],
   'plan-eng-review-artifact':  ['plan-eng-review/**'],
 
-  // Ship
-  'ship-base-branch': ['ship/**'],
+  // chief-push
+  'chief-push-base-branch': ['chief-push/**'],
 
   // Retro
   'retro':             ['retro/**'],
@@ -77,10 +77,10 @@ export const E2E_TOUCHFILES: Record<string, string[]> = {
   'codex-review': ['codex/**'],
 
   // QA bootstrap
-  'qa-bootstrap': ['qa/**', 'browse/src/**', 'ship/**'],
+  'qa-bootstrap': ['qa/**', 'browse/src/**', 'chief-push/**'],
 
-  // Ship coverage audit
-  'ship-coverage-audit': ['ship/**'],
+  // chief-push coverage audit
+  'chief-push-coverage-audit': ['chief-push/**'],
 
   // Design
   'design-consultation-core':     ['design-consultation/**'],
@@ -120,11 +120,11 @@ export const LLM_JUDGE_TOUCHFILES: Record<string, string[]> = {
   'qa/SKILL.md workflow':             ['qa/SKILL.md', 'qa/SKILL.md.tmpl'],
   'qa/SKILL.md health rubric':        ['qa/SKILL.md', 'qa/SKILL.md.tmpl'],
   'qa/SKILL.md anti-refusal':         ['qa/SKILL.md', 'qa/SKILL.md.tmpl', 'qa-only/SKILL.md', 'qa-only/SKILL.md.tmpl'],
-  'cross-skill greptile consistency': ['review/SKILL.md', 'review/SKILL.md.tmpl', 'ship/SKILL.md', 'ship/SKILL.md.tmpl', 'review/greptile-triage.md', 'retro/SKILL.md', 'retro/SKILL.md.tmpl'],
+  'cross-skill greptile consistency': ['review/SKILL.md', 'review/SKILL.md.tmpl', 'chief-push/SKILL.md', 'chief-push/SKILL.md.tmpl', 'review/greptile-triage.md', 'retro/SKILL.md', 'retro/SKILL.md.tmpl'],
   'baseline score pinning':           ['SKILL.md', 'SKILL.md.tmpl', 'test/fixtures/eval-baselines.json'],
 
   // Ship & Release
-  'ship/SKILL.md workflow':               ['ship/SKILL.md', 'ship/SKILL.md.tmpl'],
+  'chief-push/SKILL.md workflow':         ['chief-push/SKILL.md', 'chief-push/SKILL.md.tmpl'],
   'document-release/SKILL.md workflow':   ['document-release/SKILL.md', 'document-release/SKILL.md.tmpl'],
 
   // Plan Reviews
