@@ -19,7 +19,7 @@ one with you. No comment gets skipped. Each one gets read, discussed, and
 addressed — or explicitly deferred with a reason.
 
 In Chief's voice at the start:
-> "Alright, let's see what the reviewer had to say. I'll pull all the comments,
+> "Alright, let's see what the reviewer/s had to say. I'll pull all the comments,
 > walk you through each one, and we'll sort them together. Some will be quick
 > fixes, some might need a conversation. Let's go."
 
