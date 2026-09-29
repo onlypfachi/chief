@@ -13,9 +13,12 @@ const IGNORED_DIRS = new Set(['node_modules', '.git']);
 function discover(root: string, file: string): string[] {
   const dirs: string[] = [];
   if (fs.existsSync(path.join(root, file))) dirs.push('.');
-  for (const entry of fs.readdirSync(root, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
-    if (!entry.isDirectory() || IGNORED_DIRS.has(entry.name) || entry.name.startsWith('.')) continue;
-    if (fs.existsSync(path.join(root, entry.name, file))) dirs.push(entry.name);
+  for (const name of fs.readdirSync(root).sort((a, b) => a.localeCompare(b))) {
+    if (IGNORED_DIRS.has(name) || name.startsWith('.')) continue;
+    const dir = path.join(root, name);
+    // statSync follows symlinks, matching setup's `*/` glob
+    if (!fs.statSync(dir, { throwIfNoEntry: false })?.isDirectory()) continue;
+    if (fs.existsSync(path.join(dir, file))) dirs.push(name);
   }
   return dirs;
 }
