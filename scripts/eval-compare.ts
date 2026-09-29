@@ -11,11 +11,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import {
-  findPreviousRun,
-  compareEvalResults,
-  formatComparison,
-} from '../test/helpers/eval-store';
+import { findPreviousRun } from '../test/helpers/eval-store';
+import { compareEvalResults, formatComparison } from '../test/helpers/eval-comparison';
 import type { EvalResult } from '../test/helpers/eval-store';
 
 const EVAL_DIR = path.join(os.homedir(), '.chief-dev', 'evals');

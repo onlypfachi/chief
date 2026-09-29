@@ -388,6 +388,21 @@
 **Priority:** P2
 **Depends on:** None
 
+### Per-resolver eval touchfiles
+
+**What:** Map each `scripts/resolvers/*.ts` file to only the evals whose skills use its `{{PLACEHOLDER}}`, instead of treating every resolver as a global touchfile.
+
+**Why:** Editing one resolver (e.g. the QA methodology text) currently re-runs all 67 paid evals (~$4); a narrow mapping would re-run only the affected skills' evals.
+
+**Pros:** Cheaper, faster eval runs on prompt edits.
+
+**Cons:** One more mapping to keep right; a wrong mapping silently skips an eval that should have run.
+
+**Context:** `scripts/resolvers/**` was made a global touchfile when the resolvers were split out of `gen-skill-docs.ts` (structure cleanup, 2026-09). Derive the mapping instead of hand-writing it: scan templates for each `{{PLACEHOLDER}}` (see `scripts/discover-skills.ts`), map placeholder → resolver file via `RESOLVERS` in `gen-skill-docs.ts`, and union with each eval's existing touchfiles in `test/helpers/touchfiles.ts`. Keep `preamble.ts` global — every skill uses it.
+
+**Effort:** S
+**Priority:** P3
+
 ### Cross-platform URL open helper
 
 **What:** `gstack-open-url` helper script — detect platform, use `open` (macOS) or `xdg-open` (Linux).
@@ -448,7 +463,7 @@ Shipped in v0.8.3. Step 8.5 added to `/ship` — after creating the PR, `/ship` 
 
 ### `{{DOC_VOICE}}` shared resolver
 
-**What:** Create a placeholder resolver in gen-skill-docs.ts encoding the gstack voice guide (friendly, user-forward, lead with benefits). Inject into /chief-push Phase 9, /document-release Step 5, and reference from CLAUDE.md.
+**What:** Create a placeholder resolver in `scripts/resolvers/doc-voice.ts` (registered in gen-skill-docs.ts) encoding the gstack voice guide (friendly, user-forward, lead with benefits). Inject into /chief-push Phase 9, /document-release Step 5, and reference from CLAUDE.md.
 
 **Why:** DRY — voice rules currently live inline in 3 places (CLAUDE.md CHANGELOG style section, /chief-push Phase 9, /document-release Step 5). When the voice evolves, all three drift.
 

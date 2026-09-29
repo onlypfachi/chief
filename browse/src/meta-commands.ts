@@ -9,18 +9,7 @@ import { READ_COMMANDS, WRITE_COMMANDS, META_COMMANDS } from './commands';
 import { validateNavigationUrl } from './url-validation';
 import * as Diff from 'diff';
 import * as fs from 'fs';
-import * as path from 'path';
-
-// Security: Path validation to prevent path traversal attacks
-const SAFE_DIRECTORIES = ['/tmp', process.cwd()];
-
-export function validateOutputPath(filePath: string): void {
-  const resolved = path.resolve(filePath);
-  const isSafe = SAFE_DIRECTORIES.some(dir => resolved === dir || resolved.startsWith(dir + '/'));
-  if (!isSafe) {
-    throw new Error(`Path must be within: ${SAFE_DIRECTORIES.join(', ')}`);
-  }
-}
+import { validateOutputPath } from './path-validation';
 
 export async function handleMetaCommand(
   command: string,

@@ -3,20 +3,21 @@ import { COMMAND_DESCRIPTIONS } from '../browse/src/commands';
 import { SNAPSHOT_FLAGS } from '../browse/src/snapshot';
 import * as fs from 'fs';
 import * as path from 'path';
+import { discoverSkillDirs } from '../scripts/discover-skills';
 
 const ROOT = path.resolve(import.meta.dir, '..');
 
 describe('gen-skill-docs', () => {
-  test('generated SKILL.md contains all command categories', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+  test('browse/SKILL.md contains all command categories', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     const categories = new Set(Object.values(COMMAND_DESCRIPTIONS).map(d => d.category));
     for (const cat of categories) {
       expect(content).toContain(`### ${cat}`);
     }
   });
 
-  test('generated SKILL.md contains all commands', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+  test('browse/SKILL.md contains all commands', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     for (const [cmd, meta] of Object.entries(COMMAND_DESCRIPTIONS)) {
       const display = meta.usage || cmd;
       expect(content).toContain(display);
@@ -24,7 +25,7 @@ describe('gen-skill-docs', () => {
   });
 
   test('command table is sorted alphabetically within categories', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+    const content = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     // Extract command names from the Navigation section as a test
     const navSection = content.match(/### Navigation\n\|.*\n\|.*\n([\s\S]*?)(?=\n###|\n## )/);
     expect(navSection).not.toBeNull();
@@ -49,36 +50,15 @@ describe('gen-skill-docs', () => {
   });
 
   test('snapshot flags section contains all flags', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+    const content = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     for (const flag of SNAPSHOT_FLAGS) {
       expect(content).toContain(flag.short);
       expect(content).toContain(flag.description);
     }
   });
 
-  // All skills that must have templates — single source of truth
-  const ALL_SKILLS = [
-    { dir: '.', name: 'root chief' },
-    { dir: 'browse', name: 'browse' },
-    { dir: 'qa', name: 'qa' },
-    { dir: 'qa-only', name: 'qa-only' },
-    { dir: 'review', name: 'review' },
-    { dir: 'chief-push', name: 'chief-push' },
-    { dir: 'plan-ceo-review', name: 'plan-ceo-review' },
-    { dir: 'plan-eng-review', name: 'plan-eng-review' },
-    { dir: 'retro', name: 'retro' },
-    { dir: 'setup-browser-cookies', name: 'setup-browser-cookies' },
-    { dir: 'chief-upgrade', name: 'chief-upgrade' },
-    { dir: 'plan-design-review', name: 'plan-design-review' },
-    { dir: 'chief-structure-review', name: 'chief-structure-review' },
-    { dir: 'design-review', name: 'design-review' },
-    { dir: 'design-consultation', name: 'design-consultation' },
-    { dir: 'document-release', name: 'document-release' },
-    { dir: 'careful', name: 'careful' },
-    { dir: 'freeze', name: 'freeze' },
-    { dir: 'guard', name: 'guard' },
-    { dir: 'unfreeze', name: 'unfreeze' },
-  ];
+  // Every installed skill (any directory with a SKILL.md) — must be generated from a template
+  const ALL_SKILLS = discoverSkillDirs(ROOT).map(dir => ({ dir, name: dir === '.' ? 'root chief' : dir }));
 
   test('every skill has a SKILL.md.tmpl template', () => {
     for (const skill of ALL_SKILLS) {
@@ -132,9 +112,10 @@ describe('gen-skill-docs', () => {
 
   test('templates contain placeholders', () => {
     const rootTmpl = fs.readFileSync(path.join(ROOT, 'SKILL.md.tmpl'), 'utf-8');
-    expect(rootTmpl).toContain('{{COMMAND_REFERENCE}}');
-    expect(rootTmpl).toContain('{{SNAPSHOT_FLAGS}}');
     expect(rootTmpl).toContain('{{PREAMBLE}}');
+    // The browse reference lives only in browse/SKILL.md, not the /chief coaching skill
+    expect(rootTmpl).not.toContain('{{COMMAND_REFERENCE}}');
+    expect(rootTmpl).not.toContain('{{SNAPSHOT_FLAGS}}');
 
     const browseTmpl = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md.tmpl'), 'utf-8');
     expect(browseTmpl).toContain('{{COMMAND_REFERENCE}}');
@@ -273,7 +254,7 @@ describe('BASE_BRANCH_DETECT resolver', () => {
 describe('description quality evals', () => {
   // Regression: snapshot flags lost value hints (-d <N>, -s <sel>, -o <path>)
   test('snapshot flags with values include value hints in output', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+    const content = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     for (const flag of SNAPSHOT_FLAGS) {
       if (flag.takesValue) {
         expect(flag.valueHint).toBeDefined();
@@ -339,8 +320,8 @@ describe('description quality evals', () => {
   });
 
   // Guard: generated output uses → not ->
-  test('generated SKILL.md uses unicode arrows', () => {
-    const content = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+  test('browse/SKILL.md uses unicode arrows', () => {
+    const content = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     // Check the Tips section specifically (where we regressed -> from →)
     const tipsSection = content.slice(content.indexOf('## Tips'));
     expect(tipsSection).toContain('→');

@@ -65,9 +65,9 @@ describeIfSelected('LLM-as-judge quality evals', [
 ], () => {
   testIfSelected('command reference table', async () => {
     const t0 = Date.now();
-    const content = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
-    const start = content.indexOf('## Command Reference');
-    const end = content.indexOf('## Tips');
+    const content = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
+    const start = content.indexOf('## Full Command List');
+    const end = content.length;
     const section = content.slice(start, end);
 
     const scores = await judge('command reference table', section);
@@ -91,9 +91,9 @@ describeIfSelected('LLM-as-judge quality evals', [
 
   testIfSelected('snapshot flags reference', async () => {
     const t0 = Date.now();
-    const content = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
-    const start = content.indexOf('## Snapshot System');
-    const end = content.indexOf('## Command Reference');
+    const content = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
+    const start = content.indexOf('## Snapshot Flags');
+    const end = content.indexOf('## Full Command List');
     const section = content.slice(start, end);
 
     const scores = await judge('snapshot flags reference', section);
@@ -142,7 +142,7 @@ describeIfSelected('LLM-as-judge quality evals', [
 
   testIfSelected('setup block', async () => {
     const t0 = Date.now();
-    const content = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+    const content = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     const setupStart = content.indexOf('## SETUP');
     const setupEnd = content.indexOf('## IMPORTANT');
     const section = content.slice(setupStart, setupEnd);
@@ -169,9 +169,9 @@ describeIfSelected('LLM-as-judge quality evals', [
 
   testIfSelected('regression vs baseline', async () => {
     const t0 = Date.now();
-    const generated = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
-    const genStart = generated.indexOf('## Command Reference');
-    const genEnd = generated.indexOf('## Tips');
+    const generated = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
+    const genStart = generated.indexOf('## Full Command List');
+    const genEnd = generated.length;
     const genSection = generated.slice(genStart, genEnd);
 
     const baseline = `## Command Reference
@@ -477,9 +477,9 @@ describeIfSelected('Baseline score pinning', ['baseline score pinning'], () => {
     const baselines = JSON.parse(fs.readFileSync(baselinesPath, 'utf-8'));
     const regressions: string[] = [];
 
-    const skillContent = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
-    const cmdStart = skillContent.indexOf('## Command Reference');
-    const cmdEnd = skillContent.indexOf('## Tips');
+    const skillContent = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
+    const cmdStart = skillContent.indexOf('## Full Command List');
+    const cmdEnd = skillContent.length;
     const cmdSection = skillContent.slice(cmdStart, cmdEnd);
     const cmdScores = await judge('command reference table', cmdSection);
 

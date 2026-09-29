@@ -4,7 +4,7 @@ import type { SkillTestResult } from './helpers/session-runner';
 import { outcomeJudge, callJudge } from './helpers/llm-judge';
 import { EvalCollector, judgePassed } from './helpers/eval-store';
 import type { EvalTestEntry } from './helpers/eval-store';
-import { startTestServer } from '../browse/test/test-server';
+import { startFixtureServer } from '../browse/test/fixture-server';
 import { selectTests, detectBaseBranch, getChangedFiles, E2E_TOUCHFILES, GLOBAL_TOUCHFILES } from './helpers/touchfiles';
 import { spawnSync } from 'child_process';
 import * as fs from 'fs';
@@ -86,7 +86,7 @@ function recordE2E(name: string, suite: string, result: SkillTestResult, extra?:
   });
 }
 
-let testServer: ReturnType<typeof startTestServer>;
+let testServer: ReturnType<typeof startFixtureServer>;
 let tmpDir: string;
 const browseBin = path.resolve(ROOT, 'browse', 'dist', 'browse');
 
@@ -174,7 +174,7 @@ describeIfSelected('Skill E2E tests', [
   'skillmd-no-local-binary', 'skillmd-outside-git', 'contributor-mode', 'session-awareness',
 ], () => {
   beforeAll(() => {
-    testServer = startTestServer();
+    testServer = startFixtureServer();
     tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-e2e-'));
     setupBrowseShims(tmpDir);
   });
@@ -231,7 +231,7 @@ Report what each command returned.`,
   }, 90_000);
 
   testIfSelected('skillmd-setup-discovery', async () => {
-    const skillMd = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+    const skillMd = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     const setupStart = skillMd.indexOf('## SETUP');
     const setupEnd = skillMd.indexOf('## IMPORTANT');
     const setupBlock = skillMd.slice(setupStart, setupEnd);
@@ -263,7 +263,7 @@ Report whether it worked.`,
     // Create a tmpdir with no browse binary — no local .claude/skills/chief/browse/dist/browse
     const emptyDir = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-e2e-empty-'));
 
-    const skillMd = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+    const skillMd = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     const setupStart = skillMd.indexOf('## SETUP');
     const setupEnd = skillMd.indexOf('## IMPORTANT');
     const setupBlock = skillMd.slice(setupStart, setupEnd);
@@ -298,7 +298,7 @@ Report the exact output. Do NOT try to fix or install anything — just report w
     // Create a tmpdir outside any git repo
     const nonGitDir = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-e2e-nogit-'));
 
-    const skillMd = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+    const skillMd = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     const setupStart = skillMd.indexOf('## SETUP');
     const setupEnd = skillMd.indexOf('## IMPORTANT');
     const setupBlock = skillMd.slice(setupStart, setupEnd);
@@ -456,7 +456,7 @@ describeIfSelected('QA skill E2E', ['qa-quick'], () => {
   let qaDir: string;
 
   beforeAll(() => {
-    testServer = testServer || startTestServer();
+    testServer = testServer || startFixtureServer();
     qaDir = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-e2e-qa-'));
     setupBrowseShims(qaDir);
 
@@ -742,7 +742,7 @@ const anyOutcomeSelected = selectedTests === null || outcomeTestNames.some(t => 
   beforeAll(() => {
     // Always start fresh — previous tests' agents may have killed the shared server
     try { testServer?.server?.stop(); } catch {}
-    testServer = startTestServer();
+    testServer = startFixtureServer();
     outcomeDir = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-e2e-outcome-'));
     setupBrowseShims(outcomeDir);
 
@@ -1254,7 +1254,7 @@ describeIfSelected('QA-Only skill E2E', ['qa-only-no-fix'], () => {
   let qaOnlyDir: string;
 
   beforeAll(() => {
-    testServer = testServer || startTestServer();
+    testServer = testServer || startFixtureServer();
     qaOnlyDir = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-e2e-qa-only-'));
     setupBrowseShims(qaOnlyDir);
 

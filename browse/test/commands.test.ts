@@ -6,7 +6,7 @@
  */
 
 import { describe, test, expect, beforeAll, afterAll } from 'bun:test';
-import { startTestServer } from './test-server';
+import { startFixtureServer } from './fixture-server';
 import { BrowserManager } from '../src/browser-manager';
 import { resolveServerScript } from '../src/cli';
 import { handleReadCommand } from '../src/read-commands';
@@ -17,12 +17,12 @@ import * as fs from 'fs';
 import { spawn } from 'child_process';
 import * as path from 'path';
 
-let testServer: ReturnType<typeof startTestServer>;
+let testServer: ReturnType<typeof startFixtureServer>;
 let bm: BrowserManager;
 let baseUrl: string;
 
 beforeAll(async () => {
-  testServer = startTestServer(0);
+  testServer = startFixtureServer(0);
   baseUrl = testServer.url;
 
   bm = new BrowserManager();

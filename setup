@@ -70,11 +70,13 @@ mkdir -p "$HOME/.chief/projects"
 SKILLS_BASENAME="$(basename "$SKILLS_DIR")"
 if [ "$SKILLS_BASENAME" = "skills" ]; then
   linked=()
+  available=("chief")
   for skill_dir in "$CHIEF_DIR"/*/; do
     if [ -f "$skill_dir/SKILL.md" ]; then
       skill_name="$(basename "$skill_dir")"
       # Skip node_modules
       [ "$skill_name" = "node_modules" ] && continue
+      available+=("$skill_name")
       target="$SKILLS_DIR/$skill_name"
       # Create or update symlink; skip if a real file/directory exists
       if [ -L "$target" ] || [ ! -e "$target" ]; then
@@ -100,11 +102,8 @@ if [ "$SKILLS_BASENAME" = "skills" ]; then
     {
       printf '\n## chief\n'
       printf 'Use /browse from chief for all web browsing. Never use mcp__claude-in-chrome__* tools.\n'
-      printf 'Available skills: /chief, /chief-init, /chief-push, /chief-cook, /office-hours,\n'
-      printf '/plan-ceo-review, /plan-eng-review, /plan-design-review, /design-consultation,\n'
-      printf '/review, /browse, /qa, /qa-only, /design-review, /setup-browser-cookies,\n'
-      printf '/retro, /investigate, /chief-structure-review, /document-release, /codex, /careful, /freeze, /guard,\n'
-      printf '/unfreeze, /chief-upgrade.\n'
+      skill_list="$(printf '/%s, ' "${available[@]}")"
+      printf 'Available skills: %s.\n' "${skill_list%, }" | fold -s -w 80 | sed 's/ *$//'
       printf 'If chief skills are not working, run: cd %s && ./setup\n' "$CHIEF_DIR"
     } >> "$CLAUDE_MD"
     echo "  updated: $CLAUDE_MD"

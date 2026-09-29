@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'bun:test';
-import { extractBrowseCommands, validateSkill } from './helpers/skill-parser';
+import { extractBrowseCommands, validateSkill } from './skill-parser';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';

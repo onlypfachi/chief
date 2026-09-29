@@ -36,10 +36,10 @@ export const E2E_TOUCHFILES: Record<string, string[]> = {
   'browse-basic':    ['browse/src/**'],
   'browse-snapshot': ['browse/src/**'],
 
-  // SKILL.md setup + preamble (depend on ROOT SKILL.md only)
-  'skillmd-setup-discovery':  ['SKILL.md', 'SKILL.md.tmpl'],
-  'skillmd-no-local-binary':  ['SKILL.md', 'SKILL.md.tmpl'],
-  'skillmd-outside-git':      ['SKILL.md', 'SKILL.md.tmpl'],
+  // Browse setup block (browse/SKILL.md) + preamble (root SKILL.md)
+  'skillmd-setup-discovery':  ['browse/SKILL.md', 'browse/SKILL.md.tmpl'],
+  'skillmd-no-local-binary':  ['browse/SKILL.md', 'browse/SKILL.md.tmpl'],
+  'skillmd-outside-git':      ['browse/SKILL.md', 'browse/SKILL.md.tmpl'],
   'contributor-mode':         ['SKILL.md', 'SKILL.md.tmpl'],
   'session-awareness':        ['SKILL.md', 'SKILL.md.tmpl'],
 
@@ -112,16 +112,16 @@ export const E2E_TOUCHFILES: Record<string, string[]> = {
  * LLM-judge test touchfiles — keyed by test description string.
  */
 export const LLM_JUDGE_TOUCHFILES: Record<string, string[]> = {
-  'command reference table':          ['SKILL.md', 'SKILL.md.tmpl', 'browse/src/commands.ts'],
-  'snapshot flags reference':         ['SKILL.md', 'SKILL.md.tmpl', 'browse/src/snapshot.ts'],
+  'command reference table':          ['browse/SKILL.md', 'browse/SKILL.md.tmpl', 'browse/src/commands.ts'],
+  'snapshot flags reference':         ['browse/SKILL.md', 'browse/SKILL.md.tmpl', 'browse/src/snapshot.ts'],
   'browse/SKILL.md reference':        ['browse/SKILL.md', 'browse/SKILL.md.tmpl', 'browse/src/**'],
-  'setup block':                      ['SKILL.md', 'SKILL.md.tmpl'],
-  'regression vs baseline':           ['SKILL.md', 'SKILL.md.tmpl', 'browse/src/commands.ts', 'test/fixtures/eval-baselines.json'],
+  'setup block':                      ['browse/SKILL.md', 'browse/SKILL.md.tmpl'],
+  'regression vs baseline':           ['browse/SKILL.md', 'browse/SKILL.md.tmpl', 'browse/src/commands.ts', 'test/fixtures/eval-baselines.json'],
   'qa/SKILL.md workflow':             ['qa/SKILL.md', 'qa/SKILL.md.tmpl'],
   'qa/SKILL.md health rubric':        ['qa/SKILL.md', 'qa/SKILL.md.tmpl'],
   'qa/SKILL.md anti-refusal':         ['qa/SKILL.md', 'qa/SKILL.md.tmpl', 'qa-only/SKILL.md', 'qa-only/SKILL.md.tmpl'],
   'cross-skill greptile consistency': ['review/SKILL.md', 'review/SKILL.md.tmpl', 'chief-push/SKILL.md', 'chief-push/SKILL.md.tmpl', 'review/greptile-triage.md', 'retro/SKILL.md', 'retro/SKILL.md.tmpl'],
-  'baseline score pinning':           ['SKILL.md', 'SKILL.md.tmpl', 'test/fixtures/eval-baselines.json'],
+  'baseline score pinning':           ['browse/SKILL.md', 'browse/SKILL.md.tmpl', 'test/fixtures/eval-baselines.json'],
 
   // Ship & Release
   'chief-push/SKILL.md workflow':         ['chief-push/SKILL.md', 'chief-push/SKILL.md.tmpl'],
@@ -148,10 +148,13 @@ export const LLM_JUDGE_TOUCHFILES: Record<string, string[]> = {
 export const GLOBAL_TOUCHFILES = [
   'test/helpers/session-runner.ts',
   'test/helpers/eval-store.ts',
+  'test/helpers/eval-comparison.ts',
   'test/helpers/llm-judge.ts',
   'scripts/gen-skill-docs.ts',
+  'scripts/discover-skills.ts',
+  'scripts/resolvers/**',
   'test/helpers/touchfiles.ts',
-  'browse/test/test-server.ts',
+  'browse/test/fixture-server.ts',
 ];
 
 // --- Base branch detection ---

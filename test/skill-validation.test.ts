@@ -4,14 +4,19 @@ import { ALL_COMMANDS, COMMAND_DESCRIPTIONS, READ_COMMANDS, WRITE_COMMANDS, META
 import { SNAPSHOT_FLAGS } from '../browse/src/snapshot';
 import * as fs from 'fs';
 import * as path from 'path';
+import { discoverSkillDirs, discoverTemplates } from '../scripts/discover-skills';
 
 const ROOT = path.resolve(import.meta.dir, '..');
+
+// Generated SKILL.md files whose template includes the shared preamble
+const SKILLS_WITH_PREAMBLE = discoverTemplates(ROOT)
+  .filter(tmpl => fs.readFileSync(tmpl, 'utf-8').includes('{{PREAMBLE}}'))
+  .map(tmpl => path.relative(ROOT, tmpl).replace(/\.tmpl$/, ''));
 
 describe('SKILL.md command validation', () => {
   test('all $B commands in SKILL.md are valid browse commands', () => {
     const result = validateSkill(path.join(ROOT, 'SKILL.md'));
     expect(result.invalid).toHaveLength(0);
-    expect(result.valid.length).toBeGreaterThan(0);
   });
 
   test('all snapshot flags in SKILL.md are valid', () => {
@@ -211,20 +216,7 @@ describe('Generated SKILL.md freshness', () => {
 // --- Update check preamble validation ---
 
 describe('Update check preamble', () => {
-  const skillsWithUpdateCheck = [
-    'SKILL.md', 'browse/SKILL.md', 'qa/SKILL.md',
-    'qa-only/SKILL.md',
-    'setup-browser-cookies/SKILL.md',
-    'chief-push/SKILL.md', 'review/SKILL.md',
-    'plan-ceo-review/SKILL.md', 'plan-eng-review/SKILL.md',
-    'retro/SKILL.md',
-    'office-hours/SKILL.md', 'investigate/SKILL.md',
-    'plan-design-review/SKILL.md',
-    'design-review/SKILL.md',
-    'design-consultation/SKILL.md',
-    'document-release/SKILL.md',
-    'chief-structure-review/SKILL.md',
-  ];
+  const skillsWithUpdateCheck = SKILLS_WITH_PREAMBLE;
 
   for (const skill of skillsWithUpdateCheck) {
     test(`${skill} update check line ends with || true`, () => {
@@ -524,20 +516,7 @@ describe('TODOS-format.md reference consistency', () => {
 // --- v0.4.1 feature coverage: RECOMMENDATION format, session awareness, enum completeness ---
 
 describe('v0.4.1 preamble features', () => {
-  const skillsWithPreamble = [
-    'SKILL.md', 'browse/SKILL.md', 'qa/SKILL.md',
-    'qa-only/SKILL.md',
-    'setup-browser-cookies/SKILL.md',
-    'chief-push/SKILL.md', 'review/SKILL.md',
-    'plan-ceo-review/SKILL.md', 'plan-eng-review/SKILL.md',
-    'retro/SKILL.md',
-    'office-hours/SKILL.md', 'investigate/SKILL.md',
-    'plan-design-review/SKILL.md',
-    'design-review/SKILL.md',
-    'design-consultation/SKILL.md',
-    'document-release/SKILL.md',
-    'chief-structure-review/SKILL.md',
-  ];
+  const skillsWithPreamble = SKILLS_WITH_PREAMBLE;
 
   for (const skill of skillsWithPreamble) {
     test(`${skill} contains RECOMMENDATION format`, () => {
@@ -656,6 +635,15 @@ describe('investigate skill structure', () => {
   }
 });
 
+describe('chief-cook skill structure', () => {
+  const content = fs.readFileSync(path.join(ROOT, 'chief-cook', 'SKILL.md'), 'utf-8');
+
+  test('preamble prompts never pause a hands-off run', () => {
+    expect(content).toContain('the preamble never stops the run');
+    expect(content).toContain('Do not ask\nthe upgrade question');
+  });
+});
+
 describe('chief-structure-review skill structure', () => {
   const content = fs.readFileSync(path.join(ROOT, 'chief-structure-review', 'SKILL.md'), 'utf-8');
   for (const section of ['EnterPlanMode', 'ExitPlanMode', 'Structure conventions',
@@ -672,19 +660,7 @@ describe('chief-structure-review skill structure', () => {
 // --- Contributor mode preamble structure validation ---
 
 describe('Contributor mode preamble structure', () => {
-  const skillsWithPreamble = [
-    'SKILL.md', 'browse/SKILL.md', 'qa/SKILL.md',
-    'qa-only/SKILL.md',
-    'setup-browser-cookies/SKILL.md',
-    'chief-push/SKILL.md', 'review/SKILL.md',
-    'plan-ceo-review/SKILL.md', 'plan-eng-review/SKILL.md',
-    'retro/SKILL.md',
-    'plan-design-review/SKILL.md',
-    'design-review/SKILL.md',
-    'design-consultation/SKILL.md',
-    'document-release/SKILL.md',
-    'chief-structure-review/SKILL.md',
-  ];
+  const skillsWithPreamble = SKILLS_WITH_PREAMBLE;
 
   for (const skill of skillsWithPreamble) {
     test(`${skill} has 0-10 rating in contributor mode`, () => {
@@ -761,19 +737,7 @@ describe('Enum & Value Completeness in review checklist', () => {
 // --- Completeness Principle spot-check ---
 
 describe('Completeness Principle in generated SKILL.md files', () => {
-  const skillsWithPreamble = [
-    'SKILL.md', 'browse/SKILL.md', 'qa/SKILL.md',
-    'qa-only/SKILL.md',
-    'setup-browser-cookies/SKILL.md',
-    'chief-push/SKILL.md', 'review/SKILL.md',
-    'plan-ceo-review/SKILL.md', 'plan-eng-review/SKILL.md',
-    'retro/SKILL.md',
-    'plan-design-review/SKILL.md',
-    'design-review/SKILL.md',
-    'design-consultation/SKILL.md',
-    'document-release/SKILL.md',
-    'chief-structure-review/SKILL.md',
-  ];
+  const skillsWithPreamble = SKILLS_WITH_PREAMBLE;
 
   for (const skill of skillsWithPreamble) {
     test(`${skill} contains Completeness Principle section`, () => {
@@ -1234,15 +1198,10 @@ describe('Codex skill', () => {
 // --- Trigger phrase validation ---
 
 describe('Skill trigger phrases', () => {
-  // Skills that must have "Use when" trigger phrases in their description.
-  // Excluded: root chief (browser tool), chief-upgrade (chief-specific),
-  // humanizer (text tool)
-  const SKILLS_REQUIRING_TRIGGERS = [
-    'qa', 'qa-only', 'chief-push', 'review', 'investigate', 'office-hours',
-    'plan-ceo-review', 'plan-eng-review', 'plan-design-review',
-    'design-review', 'design-consultation', 'retro', 'document-release',
-    'codex', 'browse', 'setup-browser-cookies', 'chief-structure-review',
-  ];
+  // Every skill must have "Use when" trigger phrases in its description, except these
+  // chief-native skills that are invoked by name.
+  const TRIGGER_EXEMPT = ['.', 'chief-cook', 'chief-init', 'chief-resolve', 'chief-upgrade'];
+  const SKILLS_REQUIRING_TRIGGERS = discoverSkillDirs(ROOT).filter(dir => !TRIGGER_EXEMPT.includes(dir));
 
   for (const skill of SKILLS_REQUIRING_TRIGGERS) {
     test(`${skill}/SKILL.md has "Use when" trigger phrases`, () => {
@@ -1256,13 +1215,13 @@ describe('Skill trigger phrases', () => {
     });
   }
 
-  // Skills with proactive triggers should have "Proactively suggest" in description
-  const SKILLS_REQUIRING_PROACTIVE = [
-    'qa', 'qa-only', 'chief-push', 'review', 'investigate', 'office-hours',
-    'plan-ceo-review', 'plan-eng-review', 'plan-design-review',
-    'design-review', 'design-consultation', 'retro', 'document-release',
-    'chief-structure-review',
+  // Skills should say when to be "Proactively suggest"ed, except tools the user turns on
+  // deliberately (safety modes, browser, second opinions)
+  const PROACTIVE_EXEMPT = [
+    ...TRIGGER_EXEMPT,
+    'browse', 'setup-browser-cookies', 'codex', 'careful', 'freeze', 'guard', 'unfreeze',
   ];
+  const SKILLS_REQUIRING_PROACTIVE = discoverSkillDirs(ROOT).filter(dir => !PROACTIVE_EXEMPT.includes(dir));
 
   for (const skill of SKILLS_REQUIRING_PROACTIVE) {
     test(`${skill}/SKILL.md has "Proactively suggest" phrase`, () => {

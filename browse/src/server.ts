@@ -18,12 +18,18 @@ import { handleReadCommand } from './read-commands';
 import { handleWriteCommand } from './write-commands';
 import { handleMetaCommand } from './meta-commands';
 import { handleCookiePickerRoute } from './cookie-picker-routes';
-import { COMMAND_DESCRIPTIONS } from './commands';
+import { COMMAND_DESCRIPTIONS, READ_COMMANDS, WRITE_COMMANDS, META_COMMANDS } from './commands';
+import { consoleBuffer, networkBuffer, dialogBuffer, addConsoleEntry, addNetworkEntry, addDialogEntry, type LogEntry, type NetworkEntry, type DialogEntry } from './buffers';
+import { createLogWriter } from './log-writer';
 import { SNAPSHOT_FLAGS } from './snapshot';
 import { resolveConfig, ensureStateDir, readVersionHash } from './config';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as crypto from 'crypto';
+
+// Command sets come from commands.ts (single source of truth); buffers are re-exported for callers.
+export { READ_COMMANDS, WRITE_COMMANDS, META_COMMANDS };
+export { consoleBuffer, networkBuffer, dialogBuffer, addConsoleEntry, addNetworkEntry, addDialogEntry, type LogEntry, type NetworkEntry, type DialogEntry };
 
 // ─── Config ─────────────────────────────────────────────────────
 const config = resolveConfig();
@@ -80,61 +86,26 @@ function generateHelpText(): string {
   return lines.join('\n');
 }
 
-// ─── Buffer (from buffers.ts) ────────────────────────────────────
-import { consoleBuffer, networkBuffer, dialogBuffer, addConsoleEntry, addNetworkEntry, addDialogEntry, type LogEntry, type NetworkEntry, type DialogEntry } from './buffers';
-export { consoleBuffer, networkBuffer, dialogBuffer, addConsoleEntry, addNetworkEntry, addDialogEntry, type LogEntry, type NetworkEntry, type DialogEntry };
-
-const CONSOLE_LOG_PATH = config.consoleLog;
-const NETWORK_LOG_PATH = config.networkLog;
-const DIALOG_LOG_PATH = config.dialogLog;
-let lastConsoleFlushed = 0;
-let lastNetworkFlushed = 0;
-let lastDialogFlushed = 0;
-let flushInProgress = false;
-
-async function flushBuffers() {
-  if (flushInProgress) return; // Guard against concurrent flush
-  flushInProgress = true;
-
-  try {
-    // Console buffer
-    const newConsoleCount = consoleBuffer.totalAdded - lastConsoleFlushed;
-    if (newConsoleCount > 0) {
-      const entries = consoleBuffer.last(Math.min(newConsoleCount, consoleBuffer.length));
-      const lines = entries.map(e =>
-        `[${new Date(e.timestamp).toISOString()}] [${e.level}] ${e.text}`
-      ).join('\n') + '\n';
-      fs.appendFileSync(CONSOLE_LOG_PATH, lines);
-      lastConsoleFlushed = consoleBuffer.totalAdded;
-    }
-
-    // Network buffer
-    const newNetworkCount = networkBuffer.totalAdded - lastNetworkFlushed;
-    if (newNetworkCount > 0) {
-      const entries = networkBuffer.last(Math.min(newNetworkCount, networkBuffer.length));
-      const lines = entries.map(e =>
-        `[${new Date(e.timestamp).toISOString()}] ${e.method} ${e.url} → ${e.status || 'pending'} (${e.duration || '?'}ms, ${e.size || '?'}B)`
-      ).join('\n') + '\n';
-      fs.appendFileSync(NETWORK_LOG_PATH, lines);
-      lastNetworkFlushed = networkBuffer.totalAdded;
-    }
-
-    // Dialog buffer
-    const newDialogCount = dialogBuffer.totalAdded - lastDialogFlushed;
-    if (newDialogCount > 0) {
-      const entries = dialogBuffer.last(Math.min(newDialogCount, dialogBuffer.length));
-      const lines = entries.map(e =>
-        `[${new Date(e.timestamp).toISOString()}] [${e.type}] "${e.message}" → ${e.action}${e.response ? ` "${e.response}"` : ''}`
-      ).join('\n') + '\n';
-      fs.appendFileSync(DIALOG_LOG_PATH, lines);
-      lastDialogFlushed = dialogBuffer.totalAdded;
-    }
-  } catch {
-    // Flush failures are non-fatal — buffers are in memory
-  } finally {
-    flushInProgress = false;
-  }
-}
+// ─── Log Flushing ───────────────────────────────────────────────
+const flushBuffers = createLogWriter([
+  {
+    buffer: consoleBuffer,
+    path: config.consoleLog,
+    format: (e: LogEntry) => `[${new Date(e.timestamp).toISOString()}] [${e.level}] ${e.text}`,
+  },
+  {
+    buffer: networkBuffer,
+    path: config.networkLog,
+    format: (e: NetworkEntry) =>
+      `[${new Date(e.timestamp).toISOString()}] ${e.method} ${e.url} → ${e.status || 'pending'} (${e.duration || '?'}ms, ${e.size || '?'}B)`,
+  },
+  {
+    buffer: dialogBuffer,
+    path: config.dialogLog,
+    format: (e: DialogEntry) =>
+      `[${new Date(e.timestamp).toISOString()}] [${e.type}] "${e.message}" → ${e.action}${e.response ? ` "${e.response}"` : ''}`,
+  },
+]);
 
 // Flush every 1 second
 const flushInterval = setInterval(flushBuffers, 1000);
@@ -152,10 +123,6 @@ const idleCheckInterval = setInterval(() => {
     shutdown();
   }
 }, 60_000);
-
-// ─── Command Sets (from commands.ts — single source of truth) ───
-import { READ_COMMANDS, WRITE_COMMANDS, META_COMMANDS } from './commands';
-export { READ_COMMANDS, WRITE_COMMANDS, META_COMMANDS };
 
 // ─── Server ────────────────────────────────────────────────────
 const browserManager = new BrowserManager();
