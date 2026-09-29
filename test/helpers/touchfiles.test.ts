@@ -129,8 +129,7 @@ describe('selectTests', () => {
 
   test('SKILL.md.tmpl root template selects root-dependent tests and routing tests', () => {
     const result = selectTests(['SKILL.md.tmpl'], E2E_TOUCHFILES);
-    // Should select the 7 tests that depend on root SKILL.md
-    expect(result.selected).toContain('skillmd-setup-discovery');
+    // Should select the preamble tests that depend on root SKILL.md
     expect(result.selected).toContain('contributor-mode');
     expect(result.selected).toContain('session-awareness');
     // Also selects journey routing tests (SKILL.md.tmpl in their touchfiles)
@@ -138,6 +137,15 @@ describe('selectTests', () => {
     // Should NOT select unrelated non-routing tests
     expect(result.selected).not.toContain('plan-ceo-review');
     expect(result.selected).not.toContain('retro');
+    // The browse setup block lives in browse/SKILL.md now
+    expect(result.selected).not.toContain('skillmd-setup-discovery');
+  });
+
+  test('browse/SKILL.md.tmpl selects the setup-block tests', () => {
+    const result = selectTests(['browse/SKILL.md.tmpl'], E2E_TOUCHFILES);
+    expect(result.selected).toContain('skillmd-setup-discovery');
+    expect(result.selected).toContain('skillmd-no-local-binary');
+    expect(result.selected).toContain('skillmd-outside-git');
   });
 
   test('global touchfiles work for LLM-judge tests too', () => {

@@ -231,7 +231,7 @@ Report what each command returned.`,
   }, 90_000);
 
   testIfSelected('skillmd-setup-discovery', async () => {
-    const skillMd = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+    const skillMd = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     const setupStart = skillMd.indexOf('## SETUP');
     const setupEnd = skillMd.indexOf('## IMPORTANT');
     const setupBlock = skillMd.slice(setupStart, setupEnd);
@@ -263,7 +263,7 @@ Report whether it worked.`,
     // Create a tmpdir with no browse binary — no local .claude/skills/chief/browse/dist/browse
     const emptyDir = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-e2e-empty-'));
 
-    const skillMd = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+    const skillMd = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     const setupStart = skillMd.indexOf('## SETUP');
     const setupEnd = skillMd.indexOf('## IMPORTANT');
     const setupBlock = skillMd.slice(setupStart, setupEnd);
@@ -298,7 +298,7 @@ Report the exact output. Do NOT try to fix or install anything — just report w
     // Create a tmpdir outside any git repo
     const nonGitDir = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-e2e-nogit-'));
 
-    const skillMd = fs.readFileSync(path.join(ROOT, 'SKILL.md'), 'utf-8');
+    const skillMd = fs.readFileSync(path.join(ROOT, 'browse', 'SKILL.md'), 'utf-8');
     const setupStart = skillMd.indexOf('## SETUP');
     const setupEnd = skillMd.indexOf('## IMPORTANT');
     const setupBlock = skillMd.slice(setupStart, setupEnd);
