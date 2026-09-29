@@ -11,6 +11,7 @@
 
 import { COMMAND_DESCRIPTIONS } from '../browse/src/commands';
 import { SNAPSHOT_FLAGS } from '../browse/src/snapshot';
+import { discoverTemplates } from './discover-skills';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -1187,39 +1188,7 @@ function processTemplate(tmplPath: string): { outputPath: string; content: strin
 // ─── Main ───────────────────────────────────────────────────
 
 function findTemplates(): string[] {
-  const templates: string[] = [];
-  const candidates = [
-    path.join(ROOT, 'SKILL.md.tmpl'),
-    path.join(ROOT, 'browse', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'qa', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'qa-only', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'setup-browser-cookies', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'chief-push', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'review', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'plan-ceo-review', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'plan-eng-review', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'retro', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'office-hours', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'investigate', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'chief-structure-review', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'chief-cook', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'chief-init', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'chief-resolve', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'chief-upgrade', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'plan-design-review', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'design-review', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'design-consultation', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'document-release', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'codex', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'careful', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'freeze', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'guard', 'SKILL.md.tmpl'),
-    path.join(ROOT, 'unfreeze', 'SKILL.md.tmpl'),
-  ];
-  for (const p of candidates) {
-    if (fs.existsSync(p)) templates.push(p);
-  }
-  return templates;
+  return discoverTemplates(ROOT);
 }
 
 let hasChanges = false;
