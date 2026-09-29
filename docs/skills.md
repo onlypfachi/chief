@@ -14,7 +14,7 @@ Detailed guides for every gstack skill — philosophy, workflow, and examples.
 | [`/design-review`](#design-review) | **Designer Who Codes** | Live-site visual audit + fix loop. 80-item audit, then fixes what it finds. Atomic commits, before/after screenshots. |
 | [`/qa`](#qa) | **QA Lead** | Test your app, find bugs, fix them with atomic commits, re-verify. Auto-generates regression tests for every fix. |
 | [`/qa-only`](#qa) | **QA Reporter** | Same methodology as /qa but report only. Use when you want a pure bug report without code changes. |
-| [`/ship`](#ship) | **Release Engineer** | Sync main, run tests, audit coverage, push, open PR. Bootstraps test frameworks if you don't have one. One command. |
+| [`/chief-push`](#chief-push) | **Release Engineer** | Debug scan, lint, sync main, run tests, audit coverage, review, bump version, push, open PR. Bootstraps test frameworks if you don't have one. One command — `auto` for hands-off. |
 | [`/document-release`](#document-release) | **Technical Writer** | Update all project docs to match what you just shipped. Catches stale READMEs automatically. |
 | [`/retro`](#retro) | **Eng Manager** | Team-aware weekly retro. Per-person breakdowns, shipping streaks, test health trends, growth opportunities. |
 | [`/browse`](#browse) | **QA Engineer** | Give the agent eyes. Real Chromium browser, real clicks, real screenshots. ~100ms per command. |
@@ -498,27 +498,29 @@ Claude: [Explores 12 pages, fills 3 forms, tests 2 flows]
 
 ---
 
-## `/ship`
+## `/chief-push`
 
 This is my **release machine mode**.
 
 Once I have decided what to build, nailed the technical plan, and run a serious review, I do not want more talking. I want execution.
 
-`/ship` is for the final mile. It is for a ready branch, not for deciding what to build.
+`/chief-push` is for the final mile. It is for a ready branch, not for deciding what to build.
 
-This is where the model should stop behaving like a brainstorm partner and start behaving like a disciplined release engineer: sync with main, run the right tests, make sure the branch state is sane, update changelog or versioning if the repo expects it, push, and create or update the PR.
+This is where the model should stop behaving like a brainstorm partner and start behaving like a disciplined release engineer: strip debug statements, lint, sync with main, run the right tests, make sure the branch state is sane, update changelog or versioning if the repo expects it, push, and create or update the PR.
+
+By default you approve the version bump, the commits, and the final push. Run `/chief-push auto` and it runs straight through — it only stops for failures and real judgment calls.
 
 ### Test bootstrap
 
-If your project doesn't have a test framework, `/ship` sets one up — detects your runtime, researches the best framework, installs it, writes 3-5 real tests for your actual code, sets up CI/CD (GitHub Actions), and creates TESTING.md. 100% test coverage is the goal — tests make vibe coding safe instead of yolo coding.
+If your project doesn't have a test framework, `/chief-push` sets one up — detects your runtime, researches the best framework, installs it, writes 3-5 real tests for your actual code, sets up CI/CD (GitHub Actions), and creates TESTING.md. 100% test coverage is the goal — tests make vibe coding safe instead of yolo coding.
 
 ### Coverage audit
 
-Every `/ship` run builds a code path map from your diff, searches for corresponding tests, and produces an ASCII coverage diagram with quality stars. Gaps get tests auto-generated. Your PR body shows the coverage: `Tests: 42 → 47 (+5 new)`.
+Every `/chief-push` run builds a code path map from your diff, searches for corresponding tests, and produces an ASCII coverage diagram with quality stars. Gaps get tests auto-generated. Your PR body shows the coverage: `Tests: 42 → 47 (+5 new)`.
 
 ### Review gate
 
-`/ship` checks the [Review Readiness Dashboard](#review-readiness-dashboard) before creating the PR. If the Eng Review is missing, it asks — but won't block you. Decisions are saved per-branch so you're never re-asked.
+`/chief-push` checks the [Review Readiness Dashboard](#review-readiness-dashboard) before creating the PR. If the Eng Review is missing, it asks — but won't block you. Decisions are saved per-branch so you're never re-asked.
 
 A lot of branches die when the interesting work is done and only the boring release work is left. Humans procrastinate that part. AI should not.
 
@@ -528,7 +530,7 @@ A lot of branches die when the interesting work is done and only the boring rele
 
 This is my **technical writer mode**.
 
-After `/ship` creates the PR but before it merges, `/document-release` reads every documentation file in the project and cross-references it against the diff. It updates file paths, command lists, project structure trees, and anything else that drifted. Risky or subjective changes get surfaced as questions — everything else is handled automatically.
+After `/chief-push` creates the PR, it runs `/document-release` automatically — or run it yourself before merging. It reads every documentation file in the project and cross-references it against the diff. It updates file paths, command lists, project structure trees, and anything else that drifted. Risky or subjective changes get surfaced as questions — everything else is handled automatically.
 
 ```
 You:   /document-release
@@ -808,13 +810,13 @@ Install Greptile on your GitHub repo at [greptile.com](https://greptile.com) —
 
 The problem with any automated reviewer is triage. Greptile is good, but not every comment is a real issue. Some are false positives. Some flag things you already fixed three commits ago. Without a triage layer, the comments pile up and you start ignoring them — which defeats the purpose.
 
-gstack solves this. `/review` and `/ship` are now Greptile-aware. They read Greptile's comments, classify each one, and take action:
+gstack solves this. `/review` and `/chief-push` are now Greptile-aware. They read Greptile's comments, classify each one, and take action:
 
 - **Valid issues** get added to the critical findings and fixed before shipping
 - **Already-fixed issues** get an auto-reply acknowledging the catch
 - **False positives** get pushed back — you confirm, and a reply goes out explaining why it's wrong
 
-The result is a two-layer review: Greptile catches things asynchronously on the PR, then `/review` and `/ship` triage those findings as part of the normal workflow. Nothing falls through the cracks.
+The result is a two-layer review: Greptile catches things asynchronously on the PR, then `/review` and `/chief-push` triage those findings as part of the normal workflow. Nothing falls through the cracks.
 
 ### Learning from history
 
@@ -823,7 +825,7 @@ Every false positive you confirm gets saved to `~/.gstack/greptile-history.md`. 
 ### Example
 
 ```
-You:   /ship
+You:   /chief-push
 
 Claude: [syncs main, runs tests, pre-landing review...]
 

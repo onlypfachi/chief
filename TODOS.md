@@ -149,15 +149,15 @@
 **Effort:** L
 **Priority:** P4
 
-## Ship
+## chief-push
 
-### Ship log — persistent record of /ship runs
+### Push log — persistent record of /chief-push runs
 
-**What:** Append structured JSON entry to `.gstack/ship-log.json` at end of every /ship run (version, date, branch, PR URL, review findings, Greptile stats, todos completed, test results).
+**What:** Append structured JSON entry to `.chief/push-log.json` at end of every /chief-push run (version, date, branch, PR URL, review findings, Greptile stats, todos completed, test results).
 
 **Why:** /retro has no structured data about shipping velocity. Ship log enables: PRs-per-week trending, review finding rates, Greptile signal over time, test suite growth.
 
-**Context:** /retro already reads greptile-history.md — same pattern. Eval persistence (eval-store.ts) shows the JSON append pattern exists in the codebase. ~15 lines in ship template.
+**Context:** /retro already reads greptile-history.md — same pattern. Eval persistence (eval-store.ts) shows the JSON append pattern exists in the codebase. ~15 lines in the chief-push template.
 
 **Effort:** S
 **Priority:** P2
@@ -177,7 +177,7 @@
 
 ### Visual verification with screenshots in PR body
 
-**What:** /ship Step 7.5: screenshot key pages after push, embed in PR body.
+**What:** /chief-push Phase 14: screenshot key pages after push, embed in PR body.
 
 **Why:** Visual evidence in PRs. Reviewers see what changed without deploying locally.
 
@@ -191,7 +191,7 @@
 
 ### Inline PR annotations
 
-**What:** /ship and /review post inline review comments at specific file:line locations using `gh api` to create pull request review comments.
+**What:** /chief-push and /review post inline review comments at specific file:line locations using `gh api` to create pull request review comments.
 
 **Why:** Line-level annotations are more actionable than top-level comments. The PR thread becomes a line-by-line conversation between Greptile, Claude, and human reviewers.
 
@@ -309,7 +309,7 @@
 
 **What:** Configure S3 bucket for image hosting. One-time setup for visual PR annotations.
 
-**Why:** Prerequisite for visual PR annotations in /ship and /review.
+**Why:** Prerequisite for visual PR annotations in /chief-push and /review.
 
 **Effort:** M
 **Priority:** P2
@@ -448,9 +448,9 @@ Shipped in v0.8.3. Step 8.5 added to `/ship` — after creating the PR, `/ship` 
 
 ### `{{DOC_VOICE}}` shared resolver
 
-**What:** Create a placeholder resolver in gen-skill-docs.ts encoding the gstack voice guide (friendly, user-forward, lead with benefits). Inject into /ship Step 5, /document-release Step 5, and reference from CLAUDE.md.
+**What:** Create a placeholder resolver in gen-skill-docs.ts encoding the gstack voice guide (friendly, user-forward, lead with benefits). Inject into /chief-push Phase 9, /document-release Step 5, and reference from CLAUDE.md.
 
-**Why:** DRY — voice rules currently live inline in 3 places (CLAUDE.md CHANGELOG style section, /ship Step 5, /document-release Step 5). When the voice evolves, all three drift.
+**Why:** DRY — voice rules currently live inline in 3 places (CLAUDE.md CHANGELOG style section, /chief-push Phase 9, /document-release Step 5). When the voice evolves, all three drift.
 
 **Context:** Same pattern as `{{QA_METHODOLOGY}}` — shared block injected into multiple templates to prevent drift. ~20 lines in gen-skill-docs.ts.
 
@@ -476,9 +476,9 @@ Shipped in v0.8.3. Step 8.5 added to `/ship` — after creating the PR, `/ship` 
 
 **What:** Create a `/merge` skill that merges an approved PR, but first checks the Review Readiness Dashboard and runs `/review` (Fix-First) if code review hasn't been done. Separates "ship" (create PR) from "merge" (land it).
 
-**Why:** Currently `/review` runs inside `/ship` Step 3.5 but isn't tracked as a gate. A `/merge` skill ensures code review always happens before landing, and enables workflows where someone else reviews the PR first.
+**Why:** Currently `/review` runs inside `/chief-push` Phase 7 but isn't tracked as a gate. A `/merge` skill ensures code review always happens before landing, and enables workflows where someone else reviews the PR first.
 
-**Context:** `/ship` creates the PR. `/merge` would: check dashboard → run `/review` if needed → `gh pr merge`. This is where code review tracking belongs — at merge time, not at plan time.
+**Context:** `/chief-push` creates the PR. `/merge` would: check dashboard → run `/review` if needed → `gh pr merge`. This is where code review tracking belongs — at merge time, not at plan time.
 
 **Effort:** M
 **Priority:** P2

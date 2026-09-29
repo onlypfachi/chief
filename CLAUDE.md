@@ -65,7 +65,7 @@ gstack/
 ├── qa-only/         # /qa-only skill (report-only QA, no fixes)
 ├── plan-design-review/  # /plan-design-review skill (report-only design audit)
 ├── design-review/    # /design-review skill (design audit + fix loop)
-├── ship/            # Ship workflow skill
+├── chief-push/      # /chief-push skill (quality gates → commit → push → PR)
 ├── review/          # PR review skill
 ├── plan-ceo-review/ # /plan-ceo-review skill
 ├── plan-eng-review/ # /plan-eng-review skill
@@ -198,7 +198,7 @@ that may be ready to promote to TODOs or implement.
 
 ## E2E eval failure blame protocol
 
-When an E2E eval fails during `/ship` or any other workflow, **never claim "not
+When an E2E eval fails during `/chief-push` or any other workflow, **never claim "not
 related to our changes" without proving it.** These systems have invisible couplings —
 a preamble text change affects agent behavior, a new helper changes timing, a
 regenerated SKILL.md shifts prompt context.
@@ -229,7 +229,7 @@ This project uses chief for developer coaching and workflow automation.
 stack, conventions, team setup, and coaching configuration.
 
 Available skills: /chief, /chief-init, /chief-push, /chief-cook, /chief-upgrade,
-/chief-resolve, /review, /ship, /qa, /qa-only, /investigate, /retro, /office-hours,
+/chief-resolve, /review, /qa, /qa-only, /investigate, /retro, /office-hours,
 /plan-eng-review, /plan-ceo-review, /plan-design-review, /design-review,
 /design-consultation, /document-release, /codex, /careful, /freeze, /guard,
 /unfreeze, /setup-browser-cookies, /browse.
