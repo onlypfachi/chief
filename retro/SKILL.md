@@ -300,7 +300,7 @@ If TODOS.md doesn't exist, skip the Backlog Health row.
 **Skill Usage (if analytics exist):** Read `~/.chief/analytics/skill-usage.jsonl` if it exists. Filter entries within the retro time window by `ts` field. Separate skill activations (no `event` field) from hook fires (`event: "hook_fire"`). Aggregate by skill name. Present as:
 
 ```
-| Skill Usage | /ship(12) /qa(8) /review(5) · 3 safety hook fires |
+| Skill Usage | /chief-push(12) /qa(8) /review(5) · 3 safety hook fires |
 ```
 
 If the JSONL file doesn't exist or has no entries in the window, skip the Skill Usage row.

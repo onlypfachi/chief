@@ -218,7 +218,7 @@ If not solo: "What's the experience mix? Like, 2 seniors and a mid, or something
 >
 > A) All in — suggest skills whenever they're relevant
 > B) Selective — only for code review (/review) and QA (/qa)
-> C) Minimal — just for shipping (/ship) and debugging (/investigate)
+> C) Minimal — just for pushing (/chief-push) and debugging (/investigate)
 > D) On demand — don't suggest, I'll call you when I need you
 
 ---
@@ -329,7 +329,7 @@ This project uses chief for developer coaching and workflow automation.
 stack, conventions, team setup, and coaching configuration.
 
 Available skills: /chief, /chief-init, /chief-push, /chief-cook, /chief-resolve,
-/chief-upgrade, /review, /ship, /qa, /qa-only, /investigate, /retro, /office-hours,
+/chief-upgrade, /review, /qa, /qa-only, /investigate, /retro, /office-hours,
 /plan-eng-review, /plan-ceo-review, /plan-design-review, /design-review,
 /design-consultation, /document-release, /codex, /careful, /freeze, /guard,
 /unfreeze, /browse, /setup-browser-cookies.

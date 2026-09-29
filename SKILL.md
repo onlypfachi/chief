@@ -169,7 +169,6 @@ When you notice the developer is at one of these stages, suggest the appropriate
 - Testing the app → suggest /qa
 - Code review before merge → suggest /review
 - Visual design audit → suggest /design-review
-- Ready to deploy / create PR → suggest /ship
 - Post-ship doc updates → suggest /document-release
 - Weekly retrospective → suggest /retro
 - Wanting a second opinion or adversarial code review → suggest /codex
