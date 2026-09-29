@@ -64,6 +64,7 @@ describe('gen-skill-docs', () => {
     { dir: 'qa-only', name: 'qa-only' },
     { dir: 'review', name: 'review' },
     { dir: 'ship', name: 'ship' },
+    { dir: 'chief-push', name: 'chief-push' },
     { dir: 'plan-ceo-review', name: 'plan-ceo-review' },
     { dir: 'plan-eng-review', name: 'plan-eng-review' },
     { dir: 'retro', name: 'retro' },
