@@ -53,6 +53,8 @@ gstack/
 │   └── dist/        # Compiled binary
 ├── scripts/         # Build + DX tooling
 │   ├── gen-skill-docs.ts  # Template → SKILL.md generator
+│   ├── resolvers/         # One file per {{PLACEHOLDER}} resolver
+│   ├── discover-skills.ts # Finds every skill dir / template
 │   ├── skill-check.ts     # Health dashboard
 │   └── dev-skill.ts       # Watch mode
 ├── test/            # Skill validation + eval tests

@@ -187,7 +187,7 @@ SKILL.md files tell Claude how to use the browse commands. If the docs list a fl
 ```
 SKILL.md.tmpl          (human-written prose + placeholders)
        ↓
-gen-skill-docs.ts      (reads source code metadata)
+gen-skill-docs.ts      (fills each {{PLACEHOLDER}} via scripts/resolvers/)
        ↓
 SKILL.md               (committed, auto-generated sections)
 ```
@@ -198,13 +198,14 @@ Templates contain the workflows, tips, and examples that require human judgment.
 |-------------|--------|-------------------|
 | `{{COMMAND_REFERENCE}}` | `commands.ts` | Categorized command table |
 | `{{SNAPSHOT_FLAGS}}` | `snapshot.ts` | Flag reference with examples |
-| `{{PREAMBLE}}` | `gen-skill-docs.ts` | Startup block: update check, session tracking, contributor mode, AskUserQuestion format |
-| `{{BROWSE_SETUP}}` | `gen-skill-docs.ts` | Binary discovery + setup instructions |
-| `{{BASE_BRANCH_DETECT}}` | `gen-skill-docs.ts` | Dynamic base branch detection for PR-targeting skills (ship, review, qa, plan-ceo-review) |
-| `{{QA_METHODOLOGY}}` | `gen-skill-docs.ts` | Shared QA methodology block for /qa and /qa-only |
-| `{{DESIGN_METHODOLOGY}}` | `gen-skill-docs.ts` | Shared design audit methodology for /plan-design-review and /design-review |
-| `{{REVIEW_DASHBOARD}}` | `gen-skill-docs.ts` | Review Readiness Dashboard for /chief-push pre-flight |
-| `{{TEST_BOOTSTRAP}}` | `gen-skill-docs.ts` | Test framework detection, bootstrap, CI/CD setup for /qa, /chief-push, /design-review |
+| `{{PREAMBLE}}` | `scripts/resolvers/preamble.ts` | Startup block: update check, session tracking, contributor mode, AskUserQuestion format |
+| `{{BROWSE_SETUP}}` | `scripts/resolvers/browse-setup.ts` | Binary discovery + setup instructions |
+| `{{BASE_BRANCH_DETECT}}` | `scripts/resolvers/base-branch-detect.ts` | Dynamic base branch detection for PR-targeting skills (ship, review, qa, plan-ceo-review) |
+| `{{QA_METHODOLOGY}}` | `scripts/resolvers/qa-methodology.ts` | Shared QA methodology block for /qa and /qa-only |
+| `{{DESIGN_METHODOLOGY}}` | `scripts/resolvers/design-methodology.ts` | Shared design audit methodology for /plan-design-review and /design-review |
+| `{{DESIGN_REVIEW_LITE}}` | `scripts/resolvers/design-review-lite.ts` | Condensed design checks for /review and /chief-push |
+| `{{REVIEW_DASHBOARD}}` | `scripts/resolvers/review-dashboard.ts` | Review Readiness Dashboard for /chief-push pre-flight |
+| `{{TEST_BOOTSTRAP}}` | `scripts/resolvers/test-bootstrap.ts` | Test framework detection, bootstrap, CI/CD setup for /qa, /chief-push, /design-review |
 
 This is structurally sound — if a command exists in code, it appears in docs. If it doesn't exist, it can't appear.
 
