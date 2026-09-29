@@ -15,9 +15,9 @@ import {
   E2E_TOUCHFILES,
   LLM_JUDGE_TOUCHFILES,
   GLOBAL_TOUCHFILES,
-} from './helpers/touchfiles';
+} from './touchfiles';
 
-const ROOT = path.resolve(import.meta.dir, '..');
+const ROOT = path.resolve(import.meta.dir, '..', '..');
 
 // --- matchGlob ---
 

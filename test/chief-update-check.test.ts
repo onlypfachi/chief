@@ -11,7 +11,7 @@ import { mkdtempSync, writeFileSync, rmSync, existsSync, readFileSync, mkdirSync
 import { join } from 'path';
 import { tmpdir } from 'os';
 
-const SCRIPT = join(import.meta.dir, '..', '..', 'bin', 'chief-update-check');
+const SCRIPT = join(import.meta.dir, '..', 'bin', 'chief-update-check');
 
 let chiefDir: string;
 let stateDir: string;
@@ -41,7 +41,7 @@ beforeEach(() => {
   // Link real chief-config so update_check config check works
   const binDir = join(chiefDir, 'bin');
   mkdirSync(binDir);
-  symlinkSync(join(import.meta.dir, '..', '..', 'bin', 'chief-config'), join(binDir, 'chief-config'));
+  symlinkSync(join(import.meta.dir, '..', 'bin', 'chief-config'), join(binDir, 'chief-config'));
 });
 
 afterEach(() => {
@@ -221,7 +221,7 @@ describe('chief-update-check', () => {
   // regressions like the "exits 1 when up to date" bug.
   test('exits 0 with real project VERSION and unreachable remote', () => {
     // Simulate agent context: real VERSION file, network unavailable
-    const projectRoot = join(import.meta.dir, '..', '..');
+    const projectRoot = join(import.meta.dir, '..');
     const versionFile = join(projectRoot, 'VERSION');
     if (!existsSync(versionFile)) return; // skip if no VERSION
     const version = readFileSync(versionFile, 'utf-8').trim();
