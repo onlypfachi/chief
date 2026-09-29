@@ -156,7 +156,7 @@ RECOMMENDATION: [what the user should do next]
 # browse: QA Testing & Dogfooding
 
 Persistent headless Chromium. First call auto-starts (~3s), then ~100ms per command.
-State persists between calls (cookies, tabs, login sessions).
+Auto-shuts down after 30 min idle. State persists between calls (cookies, tabs, login sessions).
 
 ## SETUP (run this check BEFORE any browse command)
 
@@ -176,6 +176,12 @@ If `NEEDS_SETUP`:
 1. Tell the user: "chief browse needs a one-time build (~10 seconds). OK to proceed?" Then STOP and wait.
 2. Run: `cd <SKILL_DIR> && ./setup`
 3. If `bun` is not installed: `curl -fsSL https://bun.sh/install | bash`
+
+## IMPORTANT
+
+- Use the compiled binary via Bash: `$B <command>`
+- NEVER use `mcp__claude-in-chrome__*` tools. They are slow and unreliable.
+- Dialogs (alert/confirm/prompt) are auto-accepted by default — no browser lockup.
 
 ## Core QA Patterns
 
@@ -228,6 +234,9 @@ $B is checked "#agree-checkbox"
 $B is editable "#name-field"
 $B is focused "#search-input"
 $B js "document.body.textContent.includes('Success')"
+$B js "document.querySelectorAll('.list-item').length"   # element count
+$B attrs "#logo"                                         # all attributes as JSON
+$B css ".button" "background-color"                      # computed CSS property
 ```
 
 ### 7. Test responsive layouts
@@ -235,6 +244,12 @@ $B js "document.body.textContent.includes('Success')"
 $B responsive /tmp/layout        # mobile + tablet + desktop screenshots
 $B viewport 375x812              # or set specific viewport
 $B screenshot /tmp/mobile.png
+
+# Crop to an element, a region, or the viewport only
+$B screenshot "#hero-banner" /tmp/hero.png
+$B screenshot @e3 /tmp/button.png
+$B screenshot --clip 0,0,800,600 /tmp/above-fold.png
+$B screenshot --viewport /tmp/viewport.png
 ```
 
 ### 8. Test file uploads
@@ -258,6 +273,45 @@ $B diff https://staging.app.com https://prod.app.com
 
 ### 11. Show screenshots to the user
 After `$B screenshot`, `$B snapshot -a -o`, or `$B responsive`, always use the Read tool on the output PNG(s) so the user can see them. Without this, screenshots are invisible.
+
+### 12. Test forms with validation
+```bash
+$B snapshot -i
+$B click @e10                    # submit empty
+$B snapshot -D                   # diff shows error messages appeared
+$B is visible ".error-message"
+$B fill @e3 "valid input"
+$B click @e10
+$B snapshot -D                   # errors gone, success state
+```
+
+### 13. Test authenticated pages
+```bash
+$B cookie-import-browser                             # interactive picker
+$B cookie-import-browser comet --domain .github.com  # or one domain directly
+$B goto https://github.com/settings/profile
+```
+
+### 14. Multi-step chain (efficient for long flows)
+```bash
+echo '[
+  ["goto","https://app.example.com"],
+  ["snapshot","-i"],
+  ["fill","@e3","test@test.com"],
+  ["click","@e5"],
+  ["snapshot","-D"]
+]' | $B chain
+```
+
+## Tips
+
+1. **Navigate once, query many times.** `goto` loads the page; then `text`, `js`, `screenshot` all hit the loaded page instantly.
+2. **Use `snapshot -i` first.** See all interactive elements, then click/fill by ref. No CSS selector guessing.
+3. **Use `snapshot -D` to verify.** Baseline → action → diff. See exactly what changed.
+4. **Use `is` for assertions.** `is visible .modal` is faster and more reliable than parsing page text.
+5. **Use `snapshot -C` for tricky UIs.** Finds clickable divs that the accessibility tree misses.
+6. **Check `console` after actions.** Catch JS errors that don't surface visually.
+7. **Use `chain` for long flows.** Single command, no per-step CLI overhead.
 
 ## User Handoff
 
