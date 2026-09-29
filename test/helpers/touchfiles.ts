@@ -148,6 +148,7 @@ export const LLM_JUDGE_TOUCHFILES: Record<string, string[]> = {
 export const GLOBAL_TOUCHFILES = [
   'test/helpers/session-runner.ts',
   'test/helpers/eval-store.ts',
+  'test/helpers/eval-comparison.ts',
   'test/helpers/llm-judge.ts',
   'scripts/gen-skill-docs.ts',
   'test/helpers/touchfiles.ts',
