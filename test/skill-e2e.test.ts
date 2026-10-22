@@ -2578,6 +2578,103 @@ Review the site at ${serverUrl}. Use --quick mode. Skip any AskUserQuestion call
   }, 420_000);
 });
 
+// --- Unvibe E2E ---
+
+describeIfSelected('Unvibe E2E', ['chief-unvibe-fix'], () => {
+  let unvibeDir: string;
+
+  // Ground truth for test/fixtures/unvibe-eval-slop.html: each string is a
+  // planted tell that should be gone from index.html after the run.
+  const PLANTED_TELLS = [
+    'background-clip: text',      // gradient text
+    '#7c3aed, #06b6d4',           // purple-to-cyan gradient
+    "'Inter'",                    // overused font
+    'backdrop-filter',            // glassmorphism
+    'animation: pulse',           // pulsing status dot
+    'border-left: 4px solid',     // side-tab accent border
+    'border-radius: 28px',        // extreme radius
+    'Supercharge',                // SaaS buzzword headline
+    '✨',                         // sparkle emoji
+    "It's not just bookkeeping",  // "not X, it's Y" copy
+  ];
+  // Most tells gone; agents can reasonably keep one or two with a stated reason
+  const MIN_TELLS_REMOVED = 8;
+
+  beforeAll(() => {
+    unvibeDir = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-e2e-unvibe-'));
+
+    const run = (cmd: string, args: string[]) =>
+      spawnSync(cmd, args, { cwd: unvibeDir, stdio: 'pipe', timeout: 5000 });
+
+    run('git', ['init', '-b', 'main']);
+    run('git', ['config', 'user.email', 'test@test.com']);
+    run('git', ['config', 'user.name', 'Test']);
+
+    // Strip the fixture's tagging comments so the agent has to find the tells itself
+    const fixture = fs.readFileSync(path.join(ROOT, 'test', 'fixtures', 'unvibe-eval-slop.html'), 'utf-8');
+    fs.writeFileSync(path.join(unvibeDir, 'index.html'), fixture.replace(/\s*\/\*[\s\S]*?\*\//g, ''));
+    fs.writeFileSync(path.join(unvibeDir, 'README.md'), `# Ledgerly
+
+Bookkeeping for independent bakeries: invoices, ingredient costs, and a weekly
+cash summary the owner can read in two minutes. Pre-launch, so the page only
+collects waitlist emails. We have no customers yet.
+`);
+
+    run('git', ['add', '.']);
+    run('git', ['commit', '-m', 'initial landing page']);
+
+    fs.mkdirSync(path.join(unvibeDir, 'chief-unvibe'), { recursive: true });
+    fs.copyFileSync(
+      path.join(ROOT, 'chief-unvibe', 'SKILL.md'),
+      path.join(unvibeDir, 'chief-unvibe', 'SKILL.md'),
+    );
+  });
+
+  afterAll(() => {
+    try { fs.rmSync(unvibeDir, { recursive: true, force: true }); } catch {}
+  });
+
+  test('/chief-unvibe removes planted tells and keeps the waitlist form working', async () => {
+    const result = await runSkillTest({
+      prompt: `Read chief-unvibe/SKILL.md and run /chief-unvibe on index.html.
+
+This is non-interactive: the user already said to go ahead without asking, so skip every AskUserQuestion call, including the direction checkpoint and the DESIGN.md offer. Skip the preamble update check. There is no dev server and no build step, so skip screenshots and work from source. Print the UNVIBE REPORT at the end.`,
+      workingDirectory: unvibeDir,
+      maxTurns: 35,
+      timeout: 360_000,
+      testName: 'chief-unvibe-fix',
+      runId,
+    });
+
+    logCost('/chief-unvibe', result);
+
+    const html = fs.readFileSync(path.join(unvibeDir, 'index.html'), 'utf-8');
+    const remaining = PLANTED_TELLS.filter(tell => html.includes(tell));
+    const removed = PLANTED_TELLS.length - remaining.length;
+    console.log(`Unvibe removed ${removed}/${PLANTED_TELLS.length} planted tells. Remaining: ${remaining.join(', ') || 'none'}`);
+
+    const behaviorIntact = html.includes("getElementById('waitlist')")
+      && html.includes("addEventListener('submit'")
+      && html.includes('id="waitlist"')
+      && html.includes('id="thanks"');
+
+    recordE2E('/chief-unvibe', 'Unvibe E2E', result, {
+      passed: ['success', 'error_max_turns'].includes(result.exitReason)
+        && removed >= MIN_TELLS_REMOVED && behaviorIntact && !html.includes('Sarah Chen'),
+    });
+
+    expect(['success', 'error_max_turns']).toContain(result.exitReason);
+    expect(removed).toBeGreaterThanOrEqual(MIN_TELLS_REMOVED);
+    // The fabricated testimonial is removed, never rewritten
+    expect(html).not.toContain('Sarah Chen');
+    // Re-skin only: the waitlist form still submits and shows the thank-you note
+    expect(behaviorIntact).toBe(true);
+    if (result.exitReason === 'success') {
+      expect(result.output).toContain('UNVIBE REPORT');
+    }
+  }, 420_000);
+});
+
 // --- Test Bootstrap E2E ---
 
 describeIfSelected('Test Bootstrap E2E', ['qa-bootstrap'], () => {

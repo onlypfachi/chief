@@ -455,6 +455,23 @@
 
 Shipped as v0.5.0 on main. Includes `/plan-design-review` (report-only design audit), `/qa-design-review` (audit + fix loop), and `/design-consultation` (interactive DESIGN.md creation). `{{DESIGN_METHODOLOGY}}` resolver provides shared 80-item design audit checklist.
 
+### Shared AI slop catalog for /design-review and /chief-unvibe
+
+**What:** One `{{AI_SLOP_CATALOG}}` resolver that both the design audit (grading) and `/chief-unvibe` (fixing) render, instead of two separate lists.
+
+**Why:** The lists overlap (purple gradients, 3-column feature grid, colored left border, emoji, blobs) and will drift. A new tell added to one never reaches the other.
+
+**Pros:** One source of truth. `/design-review` learns the second-generation tells (cream backgrounds, oversized italic serif heroes, Instrument Serif, eyebrow labels) that only `/chief-unvibe` knows today.
+
+**Cons:** Changes how `/design-review`, `/plan-design-review`, and the lite design check grade sites, so their evals need re-running and baselines re-checking.
+
+**Context:** The design audit's list is "AI Slop Detection" in `scripts/resolvers/design-methodology.ts` (10 items, used for the AI Slop score). `/chief-unvibe`'s is Step 1 of `chief-unvibe/SKILL.md.tmpl` (~60 items with grep starting points). Deferred from the /chief-unvibe PR to keep that PR from changing another skill's grading; for now the audit list cross-links to /chief-unvibe. Start by extracting Step 1 into a resolver, then decide whether grading uses the full catalog or a weighted subset.
+
+**Depends on:** /chief-unvibe landing.
+
+**Effort:** M
+**Priority:** P2
+
 ## Document-Release
 
 ### Auto-invoke /document-release from /ship — SHIPPED

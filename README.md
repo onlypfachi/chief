@@ -51,6 +51,7 @@ cd .claude/skills/chief && ./setup
 | `/chief-cook` | Full autonomy. Only stops for destructive operations. |
 | `/chief-resolve` | Works through PR review comments one by one and fixes them. |
 | `/chief-structure-review` | Plan-mode audit of file naming, folder structure, one-thing-per-file, and SOLID. Lists every violation with the planned fix before changing anything. |
+| `/chief-unvibe` | Strips the "an AI made this" look out of your UI. Finds the tells in your source (purple gradients, glow, three-up card grids, Inter, buzzword copy, and the newer cream-and-italic-serif look), replaces them with choices that fit your product, and checks contrast, line length, and spacing. |
 
 **Planning & review**
 

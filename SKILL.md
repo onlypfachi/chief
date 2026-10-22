@@ -179,6 +179,7 @@ When you notice the developer is at one of these stages, suggest the appropriate
 - Upgrading chief to latest version → suggest /chief-upgrade
 - Working through PR review comments → suggest /chief-resolve
 - Checking file naming, folder structure, or SOLID principles → suggest /chief-structure-review
+- A UI that looks AI-generated (gradients, card grids, glow, buzzword copy) → suggest /chief-unvibe
 
 If the user pushes back on skill suggestions ("stop suggesting things",
 "I don't need suggestions", "too aggressive"):

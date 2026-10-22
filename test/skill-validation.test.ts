@@ -657,6 +657,43 @@ describe('chief-structure-review skill structure', () => {
   });
 });
 
+describe('chief-unvibe skill structure', () => {
+  const content = fs.readFileSync(path.join(ROOT, 'chief-unvibe', 'SKILL.md'), 'utf-8');
+  for (const section of ['second-generation slop', 'Instrument Serif', 'Side-tab accent border',
+                          'Grep starting points', 'Craft floor', 'DESIGN.md', 'UNVIBE REPORT']) {
+    test(`contains ${section}`, () => expect(content).toContain(section));
+  }
+
+  test('confirms the direction before rewriting', () => {
+    expect(content).toContain('confirm the direction before rewriting');
+  });
+
+  test('never invents testimonials', () => {
+    expect(content).toContain('Never invent people');
+  });
+
+  test('grep starting points use git grep, which skips ignored files', () => {
+    expect(content).toContain("git grep -nE");
+    expect(content).not.toContain('grep -v node_modules');
+  });
+
+  test('font grep is whole-word so "interface" does not match Inter', () => {
+    expect(content).toContain('git grep -nwE "Inter|Geist');
+  });
+});
+
+// zsh (the default macOS shell) aborts a command when an unquoted glob matches
+// nothing: `grep --include=*.css` fails with "no matches found: --include=*.css".
+describe('Shell globs in skills are quoted', () => {
+  for (const tmpl of discoverTemplates(ROOT)) {
+    const rel = path.relative(ROOT, tmpl);
+    test(`${rel} has no unquoted --include= glob`, () => {
+      const content = fs.readFileSync(tmpl, 'utf-8');
+      expect(content).not.toMatch(/--include=[^'"\s]*\*/);
+    });
+  }
+});
+
 // --- Contributor mode preamble structure validation ---
 
 describe('Contributor mode preamble structure', () => {

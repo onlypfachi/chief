@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.11.0] - 2026-10-22
+
+### Added
+
+- **`/chief-unvibe`: make your UI stop looking like an AI made it.** Point it at a landing page or app shell and it finds the tells in your source with file and line: purple-to-cyan gradients, gradient text, glassy cards, glow halos, three-up feature grids, Inter everywhere, pulsing dots, "supercharge your workflow" copy, and fake testimonials. It also catches the newer "tasteful" defaults that now read as AI just as loudly: cream backgrounds, giant italic serif headlines, and eyebrow labels. It shows you what it found and the design direction it plans to take, then rebuilds with choices that fit your product, not a nicer default. It checks contrast, text size, line length, and spacing along the way, and never touches how the page works.
+- **`/design-review` now points you to `/chief-unvibe`** when you want the full list of AI-slop patterns and how to replace each one.
+
+### For contributors
+
+- New planted-slop E2E for `/chief-unvibe`, plus a static check that no skill template uses an unquoted `--include=*` glob (zsh aborts those with "no matches found").
+
 ## [0.10.0] - 2026-09-29
 
 ### Changed

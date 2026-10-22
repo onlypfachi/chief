@@ -90,6 +90,7 @@ export const E2E_TOUCHFILES: Record<string, string[]> = {
   'plan-design-review-plan-mode':   ['plan-design-review/**'],
   'plan-design-review-no-ui-scope': ['plan-design-review/**'],
   'design-review-fix':              ['design-review/**', 'browse/src/**'],
+  'chief-unvibe-fix':               ['chief-unvibe/**', 'test/fixtures/unvibe-eval-slop.html'],
 
   // chief-upgrade
   'chief-upgrade-happy-path': ['chief-upgrade/**'],
