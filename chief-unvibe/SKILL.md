@@ -318,22 +318,28 @@ what is getting removed.
 
 ### Grep starting points
 
-These catch most tells fast. Adapt the globs to the project's file types, and
-read each hit in context before counting it (a dot grid on an actual map is fine).
+These catch most tells fast. Adapt the pathspecs to the project's file types,
+and read each hit in context before counting it (a dot grid on an actual map is
+fine). `git grep` skips everything in `.gitignore` (so `node_modules` and build
+output never get scanned), and the quoted pathspecs work the same in bash and zsh.
 
 ```bash
 # Gradients, glows, glass, blobs
-grep -rnE "linear-gradient|radial-gradient|repeating-(linear|radial)-gradient|bg-gradient-|from-(purple|violet|indigo|fuchsia)|to-(cyan|sky|blue)|bg-clip-text|text-transparent|backdrop-filter|backdrop-blur|blur-3xl" --include=*.{css,scss,html,jsx,tsx,vue,svelte} . | grep -v node_modules | head -60
+git grep -nE "linear-gradient|radial-gradient|repeating-(linear|radial)-gradient|bg-gradient-|from-(purple|violet|indigo|fuchsia)|to-(cyan|sky|blue)|bg-clip-text|text-transparent|backdrop-filter|backdrop-blur|blur-3xl" -- '*.css' '*.scss' '*.html' '*.jsx' '*.tsx' '*.vue' '*.svelte' ':!*.min.*' | head -60
 # Shadows, radius, side-tab borders
-grep -rnE "box-shadow|shadow-(lg|xl|2xl)|rounded-(2xl|3xl|full)|border-radius: *(2[4-9]|[3-9][0-9])px|border-l-[48]|border-left: *[3-9]px" --include=*.{css,scss,html,jsx,tsx,vue,svelte} . | grep -v node_modules | head -60
-# Fonts
-grep -rnEi "Inter|Geist|Space Grotesk|Instrument Serif" --include=*.{css,scss,html,jsx,tsx,vue,svelte,js,ts} . | grep -v node_modules | head -30
+git grep -nE "box-shadow|shadow-(lg|xl|2xl)|rounded-(2xl|3xl|full)|border-radius: *(2[4-9]|[3-9][0-9])px|border-l-[48]|border-left: *[3-9]px" -- '*.css' '*.scss' '*.html' '*.jsx' '*.tsx' '*.vue' '*.svelte' ':!*.min.*' | head -60
+# Fonts (case-sensitive, whole words, so "interface" and "printer" don't match)
+git grep -nwE "Inter|Geist|Space Grotesk|Instrument Serif" -- '*.css' '*.scss' '*.html' '*.jsx' '*.tsx' '*.vue' '*.svelte' '*.js' '*.ts' ':!*.min.*' | head -30
 # Motion tells
-grep -rnE "animate-(pulse|bounce|ping)|marquee|cubic-bezier\([^)]*-|hover:scale|scale-1[01][05]|@keyframes (blink|pulse|bounce)" --include=*.{css,scss,html,jsx,tsx,vue,svelte} . | grep -v node_modules | head -40
-# Copy tells
-grep -rnEi "streamline|empower|supercharge|world-class|enterprise-grade|seamless|theater|it's not .* it's|not just" --include=*.{html,jsx,tsx,vue,svelte,md,mdx,json} . | grep -v node_modules | head -40
-grep -rnc "—" --include=*.{html,jsx,tsx,vue,svelte,mdx} . | grep -v node_modules | grep -v ":0$"
+git grep -nE "animate-(pulse|bounce|ping)|marquee|cubic-bezier\([^)]*-|hover:scale|scale-1[01][05]|@keyframes (blink|pulse|bounce)" -- '*.css' '*.scss' '*.html' '*.jsx' '*.tsx' '*.vue' '*.svelte' ':!*.min.*' | head -40
+# Copy tells (UI copy and i18n strings, not lockfiles)
+git grep -niE "streamline|empower|supercharge|world-class|enterprise-grade|seamless|theater|it's not .* it's|not just" -- '*.html' '*.jsx' '*.tsx' '*.vue' '*.svelte' '*.mdx' '*.json' ':!*lock*' | head -40
+git grep -c "—" -- '*.html' '*.jsx' '*.tsx' '*.vue' '*.svelte' '*.mdx'
 ```
+
+Outside a git repo, swap `git grep -n` for `grep -rn --exclude-dir=node_modules`
+and turn each pathspec into a quoted `--include='*.css'`. Never leave the glob
+unquoted: zsh aborts the whole command with "no matches found".
 
 ### Checkpoint: confirm the direction before rewriting
 
