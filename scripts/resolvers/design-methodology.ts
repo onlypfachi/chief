@@ -205,6 +205,8 @@ The test: would a human designer at a respected studio ever ship this?
 - Generic hero copy ("Welcome to [X]", "Unlock the power of...", "Your all-in-one solution for...")
 - Cookie-cutter section rhythm (hero → 3 features → testimonials → pricing → CTA, every section same height)
 
+For the full catalog of tells (including the newer cream-and-italic-serif look) and how to replace each one, see /chief-unvibe.
+
 **10. Performance as Design** (6 items)
 - LCP < 2.0s (web apps), < 1.5s (informational sites)
 - CLS < 0.1 (no visible layout shifts during load)
