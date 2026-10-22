@@ -671,6 +671,27 @@ describe('chief-unvibe skill structure', () => {
   test('never invents testimonials', () => {
     expect(content).toContain('Never invent people');
   });
+
+  test('grep starting points use git grep, which skips ignored files', () => {
+    expect(content).toContain("git grep -nE");
+    expect(content).not.toContain('grep -v node_modules');
+  });
+
+  test('font grep is whole-word so "interface" does not match Inter', () => {
+    expect(content).toContain('git grep -nwE "Inter|Geist');
+  });
+});
+
+// zsh (the default macOS shell) aborts a command when an unquoted glob matches
+// nothing: `grep --include=*.css` fails with "no matches found: --include=*.css".
+describe('Shell globs in skills are quoted', () => {
+  for (const tmpl of discoverTemplates(ROOT)) {
+    const rel = path.relative(ROOT, tmpl);
+    test(`${rel} has no unquoted --include= glob`, () => {
+      const content = fs.readFileSync(tmpl, 'utf-8');
+      expect(content).not.toMatch(/--include=[^'"\s]*\*/);
+    });
+  }
 });
 
 // --- Contributor mode preamble structure validation ---
