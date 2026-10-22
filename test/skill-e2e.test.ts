@@ -2597,6 +2597,8 @@ describeIfSelected('Unvibe E2E', ['chief-unvibe-fix'], () => {
     '✨',                         // sparkle emoji
     "It's not just bookkeeping",  // "not X, it's Y" copy
   ];
+  // Most tells gone; agents can reasonably keep one or two with a stated reason
+  const MIN_TELLS_REMOVED = 8;
 
   beforeAll(() => {
     unvibeDir = fs.mkdtempSync(path.join(os.tmpdir(), 'skill-e2e-unvibe-'));
@@ -2658,12 +2660,11 @@ This is non-interactive: the user already said to go ahead without asking, so sk
 
     recordE2E('/chief-unvibe', 'Unvibe E2E', result, {
       passed: ['success', 'error_max_turns'].includes(result.exitReason)
-        && removed >= 8 && behaviorIntact && !html.includes('Sarah Chen'),
+        && removed >= MIN_TELLS_REMOVED && behaviorIntact && !html.includes('Sarah Chen'),
     });
 
     expect(['success', 'error_max_turns']).toContain(result.exitReason);
-    // Most tells gone; agents can reasonably keep one or two with a stated reason
-    expect(removed).toBeGreaterThanOrEqual(8);
+    expect(removed).toBeGreaterThanOrEqual(MIN_TELLS_REMOVED);
     // The fabricated testimonial is removed, never rewritten
     expect(html).not.toContain('Sarah Chen');
     // Re-skin only: the waitlist form still submits and shows the thank-you note
