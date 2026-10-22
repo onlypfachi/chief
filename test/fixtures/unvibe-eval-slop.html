@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ledgerly</title>
+  <style>
+    /* Planted slop for the /chief-unvibe E2E. Each tell is tagged so the test's
+       ground truth in skill-e2e.test.ts stays readable. */
+    body {
+      margin: 0;
+      background: #ffffff;                                  /* tell: pure white */
+      font-family: 'Inter', sans-serif;                     /* tell: Inter, single font */
+      color: #111;
+    }
+    .hero {
+      padding: 96px 24px;
+      text-align: center;
+      background: radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.35), transparent 60%); /* tell: glow halo */
+    }
+    .eyebrow {                                              /* tell: eyebrow label */
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 11px;
+      color: #7c3aed;
+    }
+    .hero h1 {
+      font-size: 72px;
+      background: linear-gradient(135deg, #7c3aed, #06b6d4); /* tell: purple-cyan gradient */
+      -webkit-background-clip: text;                        /* tell: gradient text */
+      background-clip: text;
+      color: transparent;
+    }
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 1.5s infinite;                       /* tell: pulsing dot */
+    }
+    @keyframes pulse { 50% { opacity: 0.3; transform: scale(1.4); } }
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; padding: 48px 24px; } /* tell: three-up grid */
+    .card {
+      padding: 24px;
+      border-radius: 28px;                                  /* tell: extreme radius */
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-left: 4px solid #7c3aed;                       /* tell: side-tab accent */
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(12px);                          /* tell: glassmorphism */
+      box-shadow: 0 20px 60px rgba(124, 58, 237, 0.25);     /* tell: hairline + wide glow shadow */
+    }
+    .icon-tile { width: 40px; height: 40px; border-radius: 12px; background: #ede9fe; } /* tell: icon tile above heading */
+    .testimonial { padding: 48px 24px; text-align: center; }
+    form { display: flex; gap: 8px; justify-content: center; padding: 48px 24px; }
+    #thanks { display: none; text-align: center; }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <p class="eyebrow">✨ Introducing Ledgerly</p>
+    <h1>Supercharge your bakery's books</h1>
+    <p>It's not just bookkeeping — it's a seamless, world-class financial command center. <span class="status-dot"></span> Live</p>
+  </section>
+
+  <section class="features">
+    <div class="card"><div class="icon-tile"></div><h3>🚀 Streamline invoicing</h3><p>Empower your team with enterprise-grade invoicing.</p></div>
+    <div class="card"><div class="icon-tile"></div><h3>📊 Smart insights</h3><p>Seamless dashboards that supercharge every decision.</p></div>
+    <div class="card"><div class="icon-tile"></div><h3>🔒 Bank-level security</h3><p>World-class protection — because trust isn't theater.</p></div>
+  </section>
+
+  <section class="testimonial">
+    <blockquote>"Ledgerly changed everything for our shop."</blockquote>
+    <p>Sarah Chen, Head of Growth at Acme Bakery</p>
+  </section>
+
+  <form id="waitlist">
+    <label for="email">Email</label>
+    <input id="email" type="email" required>
+    <button type="submit">Join the waitlist</button>
+  </form>
+  <p id="thanks">Thanks, we'll email you when Ledgerly opens.</p>
+
+  <script>
+    document.getElementById('waitlist').addEventListener('submit', function (event) {
+      event.preventDefault();
+      document.getElementById('thanks').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
