@@ -657,6 +657,22 @@ describe('chief-structure-review skill structure', () => {
   });
 });
 
+describe('chief-unvibe skill structure', () => {
+  const content = fs.readFileSync(path.join(ROOT, 'chief-unvibe', 'SKILL.md'), 'utf-8');
+  for (const section of ['second-generation slop', 'Instrument Serif', 'Side-tab accent border',
+                          'Grep starting points', 'Craft floor', 'DESIGN.md', 'UNVIBE REPORT']) {
+    test(`contains ${section}`, () => expect(content).toContain(section));
+  }
+
+  test('confirms the direction before rewriting', () => {
+    expect(content).toContain('confirm the direction before rewriting');
+  });
+
+  test('never invents testimonials', () => {
+    expect(content).toContain('Never invent people');
+  });
+});
+
 // --- Contributor mode preamble structure validation ---
 
 describe('Contributor mode preamble structure', () => {
