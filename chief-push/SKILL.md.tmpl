@@ -1003,8 +1003,10 @@ Once approved, commit each group by staging its files by name:
 git add <files-in-group> && git commit -m "<approved message>"
 ```
 
-Add any co-author trailer the project or session requires (e.g. a `Co-Authored-By:` line) to the
-final commit via a heredoc. Show the commit hashes after they're made.
+{{ATTRIBUTION}}
+
+If the attribution rules above call for a commit trailer, add it to every commit via a
+heredoc. Otherwise commit with the message alone. Show the commit hashes after they're made.
 
 ---
 
@@ -1147,7 +1149,7 @@ EOF
 )"
 ```
 
-Add any PR attribution footer the project or session requires at the end of the body.
+Add a PR footer only if the attribution rules from Phase 11 call for one (`attribution.pr`); if it is empty or unset with no session instruction, the body ends with the Test plan.
 
 After the PR is created, output the URL and announce in Chief's voice:
 > "Pushed and PR open: [PR URL]"
