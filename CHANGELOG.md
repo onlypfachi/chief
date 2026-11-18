@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.1] - 2026-11-18
+
+### Fixed
+
+- **`/chief-push` and `/document-release` now respect your Claude Code attribution settings.** If you've turned off AI attribution (`"attribution": {"commit": "", "pr": ""}` in your settings), your commits no longer get a `Co-Authored-By: Claude` line and your PRs no longer get a "Generated with Claude Code" footer. If you've set your own attribution text, that's exactly what gets used.
+
 ## [0.11.0] - 2026-10-22
 
 ### Added
