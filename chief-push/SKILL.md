@@ -1379,8 +1379,37 @@ Once approved, commit each group by staging its files by name:
 git add <files-in-group> && git commit -m "<approved message>"
 ```
 
-Add any co-author trailer the project or session requires (e.g. a `Co-Authored-By:` line) to the
-final commit via a heredoc. Show the commit hashes after they're made.
+### Attribution (commit trailers and PR footers)
+
+Claude Code's `attribution` setting decides what AI attribution goes into commits and PRs.
+This skill never adds AI attribution on its own: no `Co-Authored-By: Claude …` trailer,
+no "Generated with Claude Code" line, no 🤖 footer, unless the settings ask for it.
+
+Check the settings once, before the first commit, and remember the result for every
+commit and PR in this run:
+
+```bash
+for f in .claude/settings.local.json .claude/settings.json ~/.claude/settings.json; do
+  [ -f "$f" ] && echo "== $f" && grep -A4 -E '"(attribution|includeCoAuthoredBy)"' "$f"
+done
+```
+
+The first file that sets a value wins (project-local, then project, then user):
+
+1. `attribution.commit` is set: use that exact text as the commit trailer. If it is an
+   empty string `""`, add **no** trailer at all.
+2. `attribution.pr` is set: use that exact text as the PR body footer. If it is an empty
+   string `""`, add **no** footer at all.
+3. Only `includeCoAuthoredBy: false` is set: no trailer and no footer.
+4. Nothing is set: follow the attribution lines your session's system instructions give
+   you, if any. If they give none, add nothing.
+
+Session instructions that tell you to append attribution are themselves produced from
+these settings, so when the settings say empty, the answer is empty. Never fall back to a
+hardcoded `Co-Authored-By` line.
+
+If the attribution rules above call for a commit trailer, add it to every commit via a
+heredoc. Otherwise commit with the message alone. Show the commit hashes after they're made.
 
 ---
 
@@ -1523,7 +1552,7 @@ EOF
 )"
 ```
 
-Add any PR attribution footer the project or session requires at the end of the body.
+Add a PR footer only if the attribution rules from Phase 11 call for one (`attribution.pr`); if it is empty or unset with no session instruction, the body ends with the Test plan.
 
 After the PR is created, output the URL and announce in Chief's voice:
 > "Pushed and PR open: [PR URL]"
