@@ -21,6 +21,7 @@ import { generateDesignReviewLite } from './resolvers/design-review-lite';
 import { generateDesignMethodology } from './resolvers/design-methodology';
 import { generateReviewDashboard } from './resolvers/review-dashboard';
 import { generateTestBootstrap } from './resolvers/test-bootstrap';
+import { generateAttribution } from './resolvers/attribution';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -40,6 +41,7 @@ const RESOLVERS: Record<string, (ctx: TemplateContext) => string> = {
   DESIGN_REVIEW_LITE: generateDesignReviewLite,
   REVIEW_DASHBOARD: generateReviewDashboard,
   TEST_BOOTSTRAP: generateTestBootstrap,
+  ATTRIBUTION: generateAttribution,
 };
 
 // ─── Template Processing ────────────────────────────────────
