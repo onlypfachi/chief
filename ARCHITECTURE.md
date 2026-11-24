@@ -206,6 +206,7 @@ Templates contain the workflows, tips, and examples that require human judgment.
 | `{{DESIGN_REVIEW_LITE}}` | `scripts/resolvers/design-review-lite.ts` | Condensed design checks for /review and /chief-push |
 | `{{REVIEW_DASHBOARD}}` | `scripts/resolvers/review-dashboard.ts` | Review Readiness Dashboard for /chief-push pre-flight |
 | `{{TEST_BOOTSTRAP}}` | `scripts/resolvers/test-bootstrap.ts` | Test framework detection, bootstrap, CI/CD setup for /qa, /chief-push, /design-review |
+| `{{ATTRIBUTION}}` | `scripts/resolvers/attribution.ts` | Commit trailer and PR footer rules from Claude Code's `attribution` setting, for /chief-push and /document-release |
 
 This is structurally sound — if a command exists in code, it appears in docs. If it doesn't exist, it can't appear.
 
