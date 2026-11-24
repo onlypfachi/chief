@@ -175,18 +175,6 @@
 **Priority:** P2
 **Depends on:** /setup-gstack-upload, visual PR annotations
 
-### Visual verification with screenshots in PR body
-
-**What:** /chief-push Phase 14: screenshot key pages after push, embed in PR body.
-
-**Why:** Visual evidence in PRs. Reviewers see what changed without deploying locally.
-
-**Context:** Part of Phase 3.6. Needs S3 upload for image hosting.
-
-**Effort:** M
-**Priority:** P2
-**Depends on:** /setup-gstack-upload
-
 ## Review
 
 ### Inline PR annotations
@@ -565,6 +553,19 @@ Shipped in v0.6.5. TemplateContext in gen-skill-docs.ts bakes skill name into pr
 **Depends on:** Telemetry data showing freeze hook fires in real /investigate sessions
 
 ## Completed
+
+### Visual verification with screenshots in PR body
+
+**What:** /chief-push Phase 14: screenshot key pages after push, embed in PR body.
+
+**Why:** Visual evidence in PRs. Reviewers see what changed without deploying locally.
+
+**Context:** Part of Phase 3.6. Needs S3 upload for image hosting.
+
+**Effort:** M
+**Priority:** P2
+**Depends on:** /setup-gstack-upload
+**Completed:** v0.12.0 (2026-11-24). Shipped as /chief-push Phase 12.5, before the push. Images are hosted on a `chief-screenshots` branch, so no S3 upload is needed.
 
 ### Phase 1: Foundations (v0.2.0)
 - Rename to gstack
