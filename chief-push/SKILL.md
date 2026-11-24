@@ -2,7 +2,7 @@
 name: chief-push
 version: 2.0.0
 description: |
-  Commit, push, and open a PR — behind every quality gate: debug scan, lint, merge base branch, tests, coverage audit, pre-landing review, version bump, CHANGELOG, commit, push, PR, and doc sync. Use when asked to "push", "ship", "deploy", "commit and push", "create a PR", or "merge and push". Pass `auto` (`/chief-push auto`) for a hands-off run.
+  Commit, push, and open a PR — behind every quality gate: debug scan, lint, merge base branch, tests, coverage audit, pre-landing review, version bump, CHANGELOG, commit, push, PR (with screenshots when UI changed), and doc sync. Use when asked to "push", "ship", "deploy", "commit and push", "create a PR", or "merge and push". Pass `auto` (`/chief-push auto`) for a hands-off run.
   Proactively suggest when the user says code is ready, asks about deploying, or has just committed something.
 allowed-tools:
   - Bash
@@ -203,6 +203,7 @@ In auto mode, **only stop for:**
 - MINOR or MAJOR version bump needed (ask — see Phase 8)
 - Greptile review comments that need user decision (complex fixes, false positives)
 - TODOS.md missing and user wants to create one / disorganized and user wants to reorganize (Phase 10)
+- A UI screenshot shows a real bug in the change (Phase 12.5)
 
 In auto mode, **never stop for:**
 - Uncommitted changes (always include them)
@@ -216,6 +217,7 @@ In auto mode, **never stop for:**
 - Auto-fixable review findings (dead code, N+1, stale comments — fixed automatically)
 - Test coverage gaps (auto-generate and commit, or flag in PR body)
 - Codex second opinion (skipped in auto mode)
+- UI screenshots (captured automatically; skipped with a note if there is no dev server)
 - The final push confirmation
 
 Each phase below says what changes in auto mode. If it says nothing, it behaves the same.
@@ -1435,6 +1437,88 @@ Claiming work is complete without verification is dishonesty, not efficiency.
 
 ---
 
+## Phase 12.5: UI Screenshots (only when the diff touches UI)
+
+Reviewers should see the change, not imagine it. When the branch changes UI, capture the
+affected pages and put them in the PR body. This runs before the push on purpose: a visual
+bug caught here stops the push the same way a failing test does.
+
+```bash
+source <(~/.claude/skills/chief/bin/chief-diff-scope <base> 2>/dev/null)
+echo "SCOPE_FRONTEND=$SCOPE_FRONTEND"
+```
+
+**If `SCOPE_FRONTEND=false`:** skip this phase silently.
+
+**If `SCOPE_FRONTEND=true`:**
+
+**1. Find the app URL.** Check, in order:
+1. CLAUDE.md `## Dev server` section (or CHIEF.md): the start command and the local URL.
+2. An app already running locally: try the port the project's config or scripts name
+   (`package.json` dev script, framework config, `Procfile`, etc.):
+   ```bash
+   curl -s -o /dev/null -w "%{http_code}" http://localhost:<port>/
+   ```
+3. If neither gives a URL, ask the user for the start command and URL, and persist the answer
+   to CLAUDE.md under `## Dev server` so we never have to ask again. Offer "Skip screenshots
+   for this push" as an option.
+
+**Auto mode:** never ask. If no URL is configured and nothing is running, skip this phase and
+note "Screenshots skipped — no dev server configured" in the PR body and summary.
+
+If the app isn't running and you have a start command, start it in the background, log to
+`/tmp/chief_push_devserver.log`, and poll the URL for up to 60 seconds. Remember that you
+started it, so you can stop it at the end of this phase. If it never comes up, skip this phase
+with a note; a screenshot failure never blocks the push.
+
+**2. Find the browse binary.**
+```bash
+_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+B=""
+[ -n "$_ROOT" ] && [ -x "$_ROOT/.claude/skills/chief/browse/dist/browse" ] && B="$_ROOT/.claude/skills/chief/browse/dist/browse"
+[ -z "$B" ] && B=~/.claude/skills/chief/browse/dist/browse
+[ -x "$B" ] && echo "READY: $B" || echo "NEEDS_SETUP"
+```
+If `NEEDS_SETUP`, skip this phase with a note ("run `./setup` in the chief skill directory to
+enable PR screenshots"). Do not build it mid-push.
+
+**3. Pick the pages.** From the changed frontend files, work out which routes render them
+(route/page files map directly; for a shared component, find a page that uses it). Pick
+**at most 5** pages that best show the change. If the change sits behind a click (a modal,
+a tab, a dropdown), drive the page to that state before capturing.
+
+If a page needs login, use cookies the browse session already has. If it still redirects to
+a login screen, skip that page and note it; don't type credentials.
+
+**4. Capture desktop and mobile for each page.** Use a short, descriptive name per page
+(`settings-billing`, not `page1`):
+```bash
+rm -rf /tmp/chief_push_shots && mkdir -p /tmp/chief_push_shots
+$B viewport 1280x800
+$B goto <url>
+$B screenshot /tmp/chief_push_shots/<name>-desktop.png
+$B viewport 375x812
+$B screenshot /tmp/chief_push_shots/<name>-mobile.png
+```
+
+**Look at every screenshot** with the Read tool before using it. Drop any that show an error
+page, a blank screen, a login wall, or a loading spinner, and retry once after waiting for the
+page to settle. Never put a broken screenshot in a PR. If a screenshot shows a real bug in the
+change, stop and tell the user. (Auto mode: stop too; that's a failure, not a judgment call.)
+
+**5. Publish them.** Screenshots are never committed to the PR branch. `chief-pr-screenshots`
+stores them on a separate `chief-screenshots` branch on origin and prints Markdown image links
+pinned to that commit:
+```bash
+~/.claude/skills/chief/bin/chief-pr-screenshots /tmp/chief_push_shots/*.png
+```
+Keep the printed Markdown lines for the `## Screenshots` section in Phase 14. If the origin
+isn't on GitHub or the push fails, skip with a note.
+
+**6. Clean up.** If you started the dev server, stop it. Remove `/tmp/chief_push_shots`.
+
+---
+
 ## Phase 13: Push
 
 Present the final summary before pushing — this is the last checkpoint:
@@ -1452,6 +1536,7 @@ Ready to push:
   Coverage:    [M]/[N] paths covered (+[K] tests generated)
   Review:      ✓ [N] issues, [M] fixed
   Version:     v[new] (or "⚠ skipped — [reason]")
+  Screenshots: [N] pages captured (or "— no UI changes" / "⚠ skipped — [reason]")
 ```
 
 Ask via AskUserQuestion:
@@ -1492,7 +1577,9 @@ gh pr view --json number,title,url,state 2>/dev/null || echo "NO_PR"
 ```
 
 **If a PR already exists:** note its URL. If this run added material new sections (coverage,
-review findings), update the body with `gh pr edit --body`. Then skip to Phase 15.
+review findings, new screenshots), update the body with `gh pr edit --body`. When adding
+screenshots, replace the existing `## Screenshots` section instead of appending a second one.
+Then skip to Phase 15.
 
 **If no PR exists:** create one automatically. Do NOT ask the user for the title or body.
 
@@ -1517,6 +1604,14 @@ gh pr create --base <base> --title "<generated title>" --body "$(cat <<'EOF'
 ## Summary
 - <what changed and why — user-facing outcome, from the CHANGELOG entry>
 - <second notable change if any>
+
+## Screenshots
+<If Phase 12.5 captured screenshots: one row per page, desktop and mobile side by side:>
+| Page | Desktop | Mobile |
+|------|---------|--------|
+| <name> — <what changed on it> | <desktop markdown image> | <mobile markdown image> |
+<If Phase 12.5 was skipped with a note: "Screenshots skipped — <reason>.">
+<If no frontend files changed: omit this section entirely>
 
 ## What to review
 - <specific area or file worth a reviewer's attention>
@@ -1605,6 +1700,7 @@ Phase 9   — CHANGELOG:    ✓ entry added
 Phase 10  — TODOS:        ✓ 1 item completed
 Phase 11  — Commit:       ✓ 2 conventional commits
 Phase 12  — Verify:       ✓ fresh test run
+Phase 12.5 — Screenshots: ✓ 3 pages (6 images) (or "— no UI changes" / "⚠ skipped — [reason]")
 Phase 13  — Push:         ✓ pushed to origin
 Phase 14  — PR:           ✓ created [PR URL] (or "✓ already open [PR URL]")
 Phase 15  — Docs:         ✓ README updated (or "✓ current")
@@ -1627,6 +1723,7 @@ Status: DONE
 - **The coverage audit (Phase 6) generates coverage tests.** They must pass before committing. Never commit failing tests.
 - **Dev approves the version bump, the commits, and the final push** — unless running in auto mode.
 - **Auto mode only stops for real decisions:** base branch, unresolvable conflicts, failures, ASK review items, MINOR/MAJOR bumps, Greptile judgment calls, TODOS.md creation/reorg.
+- **UI changes get screenshots.** If the diff touches frontend files, the PR shows the affected pages on desktop and mobile. Screenshots live on the `chief-screenshots` branch, never in the PR's diff, and a screenshot problem never blocks the push.
 - **PR is created automatically.** Chief generates the title and body from the diff — no prompting for either. If a PR already exists, skip creation.
 - **Split commits for bisectability** — each commit = one logical change.
 - **Date format in CHANGELOG:** `YYYY-MM-DD`
