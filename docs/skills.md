@@ -16,7 +16,7 @@ Detailed guides for every gstack skill — philosophy, workflow, and examples.
 | [`/design-review`](#design-review) | **Designer Who Codes** | Live-site visual audit + fix loop. 80-item audit, then fixes what it finds. Atomic commits, before/after screenshots. |
 | [`/qa`](#qa) | **QA Lead** | Test your app, find bugs, fix them with atomic commits, re-verify. Auto-generates regression tests for every fix. |
 | [`/qa-only`](#qa) | **QA Reporter** | Same methodology as /qa but report only. Use when you want a pure bug report without code changes. |
-| [`/chief-push`](#chief-push) | **Release Engineer** | Debug scan, lint, sync main, run tests, audit coverage, review, bump version, push, open PR. Bootstraps test frameworks if you don't have one. One command — `auto` for hands-off. |
+| [`/chief-push`](#chief-push) | **Release Engineer** | Debug scan, lint, sync main, run tests, audit coverage, review, bump version, push, open PR (with screenshots when UI changed). Bootstraps test frameworks if you don't have one. One command — `auto` for hands-off. |
 | [`/document-release`](#document-release) | **Technical Writer** | Update all project docs to match what you just shipped. Catches stale READMEs automatically. |
 | [`/retro`](#retro) | **Eng Manager** | Team-aware weekly retro. Per-person breakdowns, shipping streaks, test health trends, growth opportunities. |
 | [`/browse`](#browse) | **QA Engineer** | Give the agent eyes. Real Chromium browser, real clicks, real screenshots. ~100ms per command. |
@@ -519,6 +519,10 @@ If your project doesn't have a test framework, `/chief-push` sets one up — det
 ### Coverage audit
 
 Every `/chief-push` run builds a code path map from your diff, searches for corresponding tests, and produces an ASCII coverage diagram with quality stars. Gaps get tests auto-generated. Your PR body shows the coverage: `Tests: 42 → 47 (+5 new)`.
+
+### Screenshots for UI changes
+
+If your branch changes UI, `/chief-push` opens the affected pages in a headless browser and takes desktop and mobile screenshots right before pushing. They go into the PR as a side-by-side table, so reviewers see the change without pulling your branch. If a screenshot shows the change is visibly broken, the push stops. The images live on a separate `chief-screenshots` branch, so they never appear in your diff. Tell it how to start your app once (it saves the answer to CLAUDE.md under `## Dev server`). In `auto` mode with no dev server, it skips screenshots and says so in the PR.
 
 ### Review gate
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0] - 2026-11-24
+
+### Added
+
+- **Your PRs now show what the UI change looks like.** When `/chief-push` sees that you changed UI files, it opens the affected pages, takes desktop and mobile screenshots, and adds them to the PR as a side-by-side table. Reviewers see the change without pulling your branch. The screenshots never land in your diff, and if anything goes wrong taking them (no dev server, a page behind a login), the push carries on with a note in the PR.
+- **A visibly broken page stops the push.** Screenshots are taken right before pushing, so if one shows the change is broken, `/chief-push` stops like it would for a failing test.
+
 ## [0.11.1] - 2026-11-18
 
 ### Fixed

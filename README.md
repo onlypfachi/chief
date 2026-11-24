@@ -47,7 +47,7 @@ cd .claude/skills/chief && ./setup
 |-------|-------------|
 | `/chief` | Coaching session: reviews your recent work, names patterns, gives you one thing to focus on. |
 | `/chief-init` | Detects your stack, asks what it can't infer, writes `CHIEF.md`. |
-| `/chief-push` | Debug scan → lint → tests → coverage audit → review → version + CHANGELOG → commit → push → PR → doc sync. `/chief-push auto` for hands-off. |
+| `/chief-push` | Debug scan → lint → tests → coverage audit → review → version + CHANGELOG → commit → UI screenshots → push → PR → doc sync. `/chief-push auto` for hands-off. |
 | `/chief-cook` | Full autonomy. Only stops for destructive operations. |
 | `/chief-resolve` | Works through PR review comments one by one and fixes them. |
 | `/chief-structure-review` | Plan-mode audit of file naming, folder structure, one-thing-per-file, and SOLID. Lists every violation with the planned fix before changing anything. |
