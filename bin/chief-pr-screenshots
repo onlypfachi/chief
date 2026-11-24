@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+# chief-pr-screenshots — publish PR screenshots without touching the PR's diff.
+#
+# Usage: chief-pr-screenshots <image> [<image> ...]
+#
+# Commits the images to an orphan branch (default: chief-screenshots) on origin
+# under <branch>/<short-sha>/<filename>, using a throwaway index so the working
+# tree, the current index, and the current branch are never touched. Prints one
+# Markdown image line per file, pinned to the screenshot commit so links never
+# go stale:
+#
+#   ![home-desktop](https://github.com/<owner>/<repo>/blob/<commit>/<path>?raw=true)
+#
+# Env overrides:
+#   CHIEF_SCREENSHOT_BRANCH  — branch to store images on (default: chief-screenshots)
+#   CHIEF_REPO_SLUG          — owner/repo for the URLs (default: parsed from origin)
+set -euo pipefail
+
+if [ "$#" -eq 0 ]; then
+  echo "usage: chief-pr-screenshots <image> [<image> ...]" >&2
+  exit 2
+fi
+
+STORE_BRANCH="${CHIEF_SCREENSHOT_BRANCH:-chief-screenshots}"
+
+for f in "$@"; do
+  if [ ! -f "$f" ]; then
+    echo "chief-pr-screenshots: not a file: $f" >&2
+    exit 1
+  fi
+done
+
+SLUG="${CHIEF_REPO_SLUG:-}"
+if [ -z "$SLUG" ]; then
+  # Raw config value: `git remote get-url` applies insteadOf rewrites.
+  ORIGIN_URL=$(git config --get remote.origin.url || true)
+  case "$ORIGIN_URL" in
+    *github.com[:/]*) ;;
+    *) echo "chief-pr-screenshots: origin is not a GitHub remote ($ORIGIN_URL)" >&2; exit 1 ;;
+  esac
+  SLUG=$(echo "$ORIGIN_URL" | sed -E 's#^.*github\.com[:/]##; s#\.git$##')
+fi
+
+SRC_BRANCH=$(git rev-parse --abbrev-ref HEAD | tr '/' '-')
+SRC_SHA=$(git rev-parse --short HEAD)
+PREFIX="$SRC_BRANCH/$SRC_SHA"
+
+TMP_INDEX=$(mktemp)
+trap 'rm -f "$TMP_INDEX"' EXIT
+
+# Every step returns on failure explicitly: `set -e` is suspended inside a
+# function called from an `||` list, and a half-built index must never be pushed.
+publish() {
+  local parent=""
+  rm -f "$TMP_INDEX"
+  if git fetch -q origin "refs/heads/$STORE_BRANCH" 2>/dev/null; then
+    parent=$(git rev-parse FETCH_HEAD) || return 1
+    GIT_INDEX_FILE="$TMP_INDEX" git read-tree "$parent" || return 1
+  else
+    GIT_INDEX_FILE="$TMP_INDEX" git read-tree --empty || return 1
+  fi
+
+  local f blob
+  for f in "$@"; do
+    blob=$(git hash-object -w "$f") || return 1
+    GIT_INDEX_FILE="$TMP_INDEX" git update-index --add --cacheinfo "100644,$blob,$PREFIX/$(basename "$f")" || return 1
+  done
+
+  local tree commit
+  tree=$(GIT_INDEX_FILE="$TMP_INDEX" git write-tree) || return 1
+  if [ -n "$parent" ]; then
+    commit=$(git commit-tree "$tree" -p "$parent" -m "screenshots: $PREFIX") || return 1
+  else
+    commit=$(git commit-tree "$tree" -m "screenshots: $PREFIX") || return 1
+  fi
+
+  git push -q origin "$commit:refs/heads/$STORE_BRANCH" || return 1
+  COMMIT="$commit"
+}
+
+COMMIT=""
+# One retry covers a concurrent push to the screenshot branch.
+publish "$@" || publish "$@" || { echo "chief-pr-screenshots: push to $STORE_BRANCH failed" >&2; exit 1; }
+
+for f in "$@"; do
+  name=$(basename "$f")
+  echo "![${name%.*}](https://github.com/$SLUG/blob/$COMMIT/$PREFIX/$name?raw=true)"
+done
